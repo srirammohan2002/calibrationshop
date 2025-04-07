@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
       name: 'OFF-ROAD EXPERT',
       description: 'Rock crawl mode with torque vectoring enhancement',
       price: 12.99,
-      hexUrl: 'https://your-supabase-url.com/off_road_mode.hex',
+      hexUrl: 'https://cchmdnjgncvhwfgwddtd.supabase.co/storage/v1/object/sign/calibration.file/off_road_cal%20%20Modified.hex?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjYWxpYnJhdGlvbi5maWxlL29mZl9yb2FkX2NhbCAgTW9kaWZpZWQuaGV4IiwiaWF0IjoxNzQ0MDE1MDQ1LCJleHAiOjE3NzU1NTEwNDV9.lps7oYZ_WuM0W1IpMUV5pZz79u8EKBXFAsxC-kE8LUs',
       image: 'assets/off_road_mode.png',
       color: const Color(0xFFA1887F),
       rating: 4.7,
