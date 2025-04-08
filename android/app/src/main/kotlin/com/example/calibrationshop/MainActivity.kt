@@ -1,4 +1,4 @@
-package com.example.calibrationshop
+package com.example.calibrationpro
 
 import io.flutter.embedding.android.FlutterActivity
 
