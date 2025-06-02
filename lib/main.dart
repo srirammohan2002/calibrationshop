@@ -29,7 +29,7 @@ class CalibrationShopApp extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
