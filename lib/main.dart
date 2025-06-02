@@ -116,10 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CalibrationFile> files = [
     CalibrationFile(
       id: '1',
-      name: 'RAIN MASTER',
+      name: 'RAIN MODE',
       description: 'Enhanced wet traction & stability control',
       price: 7.99,
-      hexUrl: 'https://your-supabase-url.com/rain_mode.hex',
+      hexUrl: 'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/Rain_cal.hex',
       image: 'assets/rain_mode.png',
       color: const Color(0xFF64B5F6),
       rating: 4.8,
@@ -138,10 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     CalibrationFile(
       id: '3',
-      name: 'ECO PRO',
+      name: 'ROAD MODE',
       description: 'Fuel efficiency optimized up to 15% savings',
       price: 5.99,
-      hexUrl: 'https://your-supabase-url.com/eco_mode.hex',
+      hexUrl: 'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/Road_cal.hex',
       image: 'assets/eco_mode.png',
       color: const Color(0xFF81C784),
       rating: 4.5,
@@ -149,10 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     CalibrationFile(
       id: '4',
-      name: 'OFF-ROAD EXPERT',
+      name: 'OFF-ROAD MODE',
       description: 'Rock crawl mode with torque vectoring enhancement',
       price: 12.99,
-      hexUrl: 'https://cchmdnjgncvhwfgwddtd.supabase.co/storage/v1/object/sign/calibration.file/off_road_cal%20%20Modified.hex?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5X2I0NTQ3NjkzLTI3NjAtNDFkZi04ZjI3LWM3NWI2NzIzZTI2MSJ9.eyJ1cmwiOiJjYWxpYnJhdGlvbi5maWxlL29mZl9yb2FkX2NhbCAgTW9kaWZpZWQuaGV4IiwiaWF0IjoxNzQ1MjI0MDE3LCJleHAiOjE3NzY3NjAwMTd9.xJKto6dM7Na7HXr3qrDnWShErMEz47GoCW-2DM8hExo',
+      hexUrl: 'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Off_Road_cal.hex',
       image: 'assets/off_road_mode.png',
       color: const Color(0xFFA1887F),
       rating: 4.7,
