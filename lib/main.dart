@@ -28,11 +28,11 @@ class CalibrationShopApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: const CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 2,
           margin: EdgeInsets.zero,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
       ),
