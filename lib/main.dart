@@ -17,24 +17,23 @@ class CalibrationShopApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[50],
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: true,
           backgroundColor: Colors.white,
-          iconTheme: const IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(color: Colors.black),
           titleTextStyle: TextStyle(
             color: Colors.black,
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Poppins',
           ),
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           elevation: 2,
+          margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          margin: EdgeInsets.zero,
         ),
       ),
       home: const SplashScreen(),
@@ -46,7 +45,7 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -82,15 +81,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 .fadeIn(duration: 500.ms),
             const SizedBox(height: 20),
             const Text(
-                  'CALIBRATION PRO',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                    letterSpacing: 1.5,
-                    fontFamily: 'Poppins',
-                  ),
-                )
+              'AUTOTUNE PRO',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                letterSpacing: 1.5,
+              ),
+            )
                 .animate()
                 .fadeIn(delay: 300.ms, duration: 500.ms)
                 .slideY(begin: 0.2, end: 0),
@@ -105,21 +103,24 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _ipController = TextEditingController(
-    text: '192.168.1.100',
-  );
+  final TextEditingController _ipController =
+      TextEditingController(text: '172.20.10.2');
+  int _currentIndex = 0;
+  String _currentSuspensionMode = 'Normal';
+  Color _currentModeColor = Colors.green;
 
-  List<CalibrationFile> files = [
+  final List<CalibrationFile> calibrationFiles = [
     CalibrationFile(
       id: '1',
       name: 'RAIN MODE',
       description: 'Enhanced wet traction & stability control',
       price: 7.99,
-      hexUrl: 'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/Rain_cal.hex',
+      hexUrl:
+          'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Rain_cal.hex',
       image: 'assets/rain_mode.png',
       color: const Color(0xFF64B5F6),
       rating: 4.8,
@@ -127,10 +128,11 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     CalibrationFile(
       id: '2',
-      name: 'SPORT PLUS',
+      name: 'ROAD MODE',
       description: 'Max performance with aggressive throttle mapping',
       price: 9.99,
-      hexUrl: 'https://your-supabase-url.com/sports_mode.hex',
+      hexUrl:
+          'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Road_cal.hex',
       image: 'assets/sports_mode.png',
       color: const Color(0xFFE57373),
       rating: 4.9,
@@ -138,225 +140,344 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     CalibrationFile(
       id: '3',
-      name: 'ROAD MODE',
+      name: 'OFF-ROAD MODE',
       description: 'Fuel efficiency optimized up to 15% savings',
       price: 5.99,
-      hexUrl: 'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/Road_cal.hex',
+      hexUrl:
+          'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Off_Road_cal.hex',
       image: 'assets/eco_mode.png',
       color: const Color(0xFF81C784),
       rating: 4.5,
       downloads: 932,
     ),
-    CalibrationFile(
-      id: '4',
-      name: 'OFF-ROAD MODE',
-      description: 'Rock crawl mode with torque vectoring enhancement',
-      price: 12.99,
-      hexUrl: 'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Off_Road_cal.hex',
-      image: 'assets/off_road_mode.png',
-      color: const Color(0xFFA1887F),
-      rating: 4.7,
-      downloads: 1567,
-    ),
-    CalibrationFile(
-      id: '5',
-      name: 'TRACK EDITION',
-      description: 'Race-spec calibration with launch control',
-      price: 14.99,
-      hexUrl: 'https://your-supabase-url.com/track_mode.hex',
-      image: 'assets/track_mode.png',
-      color: const Color(0xFFBA68C8),
-      rating: 5.0,
-      downloads: 2105,
-    ),
-    CalibrationFile(
-      id: '6',
-      name: 'WINTER PRO',
-      description: 'Cold weather optimization with soft launch',
-      price: 6.99,
-      hexUrl: 'https://your-supabase-url.com/winter_mode.hex',
-      image: 'assets/winter_mode.png',
-      color: const Color(0xFF4FC3F7),
-      rating: 4.6,
-      downloads: 876,
-    ),
+  ];
+
+  final List<Map<String, dynamic>> suspensionModes = [
+    {
+      'name': 'MODE 0',
+      'description': 'Soft suspension for maximum comfort',
+      'icon': Icons.airline_seat_recline_normal,
+      'color': Colors.blue,
+      'mode': 'MODE 0'
+    },
+    {
+      'name': 'MODE 1',
+      'description': 'Balanced ride quality and handling',
+      'icon': Icons.directions_car,
+      'color': Colors.green,
+      'mode': 'MODE 1'
+    },
+    {
+      'name': 'MODE 2',
+      'description': 'aggressive driving',
+      'icon': Icons.speed,
+      'color': Colors.red,
+      'mode': 'MODE 2'
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 120,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'FIND YOUR PERFECT CALIBRATION',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          // Shop Tab
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 120,
+                flexibleSpace: const FlexibleSpaceBar(
+                  title: Text('PREMIUM CALIBRATIONS'),
+                  centerTitle: true,
+                  background: ColoredBox(color: Colors.white),
+                ),
+                pinned: true,
+                backgroundColor: Colors.white,
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'FEATURED TUNES',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search calibrations...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              centerTitle: true,
-              background: Container(color: Colors.white),
-            ),
-            pinned: true,
-            backgroundColor: Colors.white,
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'PREMIUM CALIBRATIONS',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
-                    ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.75,
                   ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search calibrations...',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ],
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return CalibrationCard(
+                      file: calibrationFiles[index],
+                      onPurchase: () =>
+                          _showPurchaseDialog(calibrationFiles[index]),
+                      onFlash: () => _flashToEsp32(calibrationFiles[index]),
+                    ).animate().fadeIn(delay: (100 * index).ms);
+                  }, childCount: calibrationFiles.length),
+                ),
               ),
-            ),
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.75,
-              ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return CalibrationCard(
-                  file: files[index],
-                  onPurchase: () => _showPurchaseDialog(files[index]),
-                  onFlash: () => _flashToEsp32(files[index]),
-                ).animate().fadeIn(delay: (100 * index).ms);
-              }, childCount: files.length),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showIpDialog,
-        child: const Icon(Icons.settings_input_component),
-        backgroundColor: Colors.blue,
-      ),
-    );
-  }
 
-  void _showIpDialog() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'DEVICE CONNECTION',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _ipController,
-                  decoration: InputDecoration(
-                    labelText: 'ESP32 IP Address',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.developer_board),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.qr_code_scanner),
-                      onPressed: () {
-                        // QR Scanner functionality would go here
-                      },
-                    ),
+          // Suspension Tab
+          Column(
+            children: [
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      _currentModeColor.withOpacity(0.8),
+                      _currentModeColor.withOpacity(0.4),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Ensure your device is connected to the same network',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 20),
-                Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text('CANCEL'),
+                    const Icon(Icons.car_repair, size: 60, color: Colors.white),
+                    const SizedBox(height: 16),
+                    Text(
+                      _currentSuspensionMode,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Connection settings saved'),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          'CONNECT',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Current Suspension Mode',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white.withOpacity(0.9),
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: suspensionModes.length,
+                  itemBuilder: (context, index) {
+                    final mode = suspensionModes[index];
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: mode['color'].withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(mode['icon'], color: mode['color']),
+                        ),
+                        title: Text(
+                          mode['name'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(mode['description']),
+                        trailing: _currentSuspensionMode == mode['name']
+                            ? const Icon(Icons.check_circle,
+                                color: Colors.green)
+                            : null,
+                        onTap: () => _setSuspensionMode(
+                          mode['mode'],
+                          mode['name'],
+                          mode['color'],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        );
-      },
+
+          // Settings Tab
+          ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              const Text(
+                'DEVICE SETTINGS',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'ESP32 CONNECTION',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _ipController,
+                        decoration: InputDecoration(
+                          labelText: 'Device IP Address',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: const Icon(Icons.developer_board),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Ensure your device is connected to the same network',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text('SCAN NETWORK'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Connection settings saved'),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'SAVE',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'APP SETTINGS',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      SwitchListTile(
+                        title: const Text('Dark Mode'),
+                        value: false,
+                        onChanged: (value) {},
+                      ),
+                      const Divider(),
+                      SwitchListTile(
+                        title: const Text('Notifications'),
+                        value: true,
+                        onChanged: (value) {},
+                      ),
+                      const Divider(),
+                      SwitchListTile(
+                        title: const Text('Auto-Connect'),
+                        value: true,
+                        onChanged: (value) {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shop),
+            label: 'Shop',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.car_repair),
+            label: 'Suspension',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
     );
   }
 
@@ -474,15 +595,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           SnackBar(
                             content: Text('${file.name} added to cart'),
                             behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             action: SnackBarAction(
                               label: 'CHECKOUT',
                               textColor: Colors.white,
-                              onPressed: () {
-                                // Checkout functionality would go here
-                              },
+                              onPressed: () {},
                             ),
                           ),
                         );
@@ -538,21 +658,60 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       } else {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text('Error: ${response.body}'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
+        throw Exception('Failed to flash: ${response.body}');
       }
     } catch (e) {
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text('Connection failed: $e'),
+          content: Text('Error: $e'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _setSuspensionMode(String mode, String name, Color color) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text('Setting suspension to $name mode...'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://${_ipController.text}/suspension'),
+        body: {'mode': mode},
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _currentSuspensionMode = name;
+          _currentModeColor = color;
+        });
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text('Suspension set to $name mode'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception('Failed to set suspension mode');
+      }
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -726,9 +885,7 @@ class CalibrationDetails extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {
-              // Share functionality would go here
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -781,9 +938,7 @@ class CalibrationDetails extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Flash functionality would go here
-                      },
+                      onPressed: () {},
                       icon: const Icon(Icons.flash_on),
                       label: const Text('FLASH TO DEVICE'),
                       style: ElevatedButton.styleFrom(
