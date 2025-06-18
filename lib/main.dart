@@ -30,7 +30,7 @@ class CalibrationShopApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: const CardTheme(
+        cardTheme: CardTheme(
           elevation: 2,
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
