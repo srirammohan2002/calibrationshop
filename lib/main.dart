@@ -43,6 +43,8 @@ class CalibrationShopApp extends StatelessWidget {
   }
 }
 
+//borderRadius: BorderRadius.all(Radius.circular(16)),
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -791,51 +793,96 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
-  Widget _buildProfileTab() {
-    TextEditingController nameController =
-        TextEditingController(text: _userProfile.name);
+  Future<void> _pickBikeImage() async {
+    final pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
 
+    if (pickedFile != null) {
+      setState(() {
+        _userProfile.customBikeImage = File(pickedFile.files.single.path!);
+      });
+    }
+  }
+
+  Future<void> _changeProfilePicture() async {
+    final pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _userProfile.profileImage = pickedFile.files.single.path!;
+      });
+    }
+  }
+
+  final Map<String, List<String>> bikeModelsByBrand = {
+    'Bajaj': ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200', 'Avenger 220'],
+    'Royal Enfield': [
+      'Classic 350',
+      'Meteor 350',
+      'Himalayan 450',
+      'Interceptor 650'
+    ],
+    'KTM': ['Duke 390', 'Duke 250', 'RC 390', 'RC 200'],
+    'Yamaha': ['R15 V4', 'MT-15', 'FZ-S', 'FZ-X'],
+    'Harley-Davidson': ['Street 750', 'Iron 883', 'Fat Boy', 'Road King'],
+    'Other': ['Custom Bike'],
+  };
+
+  Widget _buildProfileTab() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Profile Header Card
             Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage(_userProfile.profileImage),
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.grey[200],
+                          backgroundImage: _userProfile.customBikeImage != null
+                              ? FileImage(_userProfile.customBikeImage!)
+                              : (_userProfile.profileImage.startsWith('http')
+                                      ? NetworkImage(_userProfile.profileImage)
+                                      : AssetImage(_userProfile.profileImage))
+                                  as ImageProvider,
+                        ),
+                        FloatingActionButton.small(
+                          onPressed: _changeProfilePicture,
+                          backgroundColor: Colors.blue,
+                          child: const Icon(Icons.camera_alt, size: 20),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
-                    TextField(
-                      controller: nameController,
+                    TextFormField(
+                      initialValue: _userProfile.name,
                       decoration: InputDecoration(
                         labelText: 'Rider Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.save),
-                          onPressed: () {
-                            setState(() {
-                              _userProfile = UserProfile(
-                                name: nameController.text,
-                                email: _userProfile.email,
-                                bikeModel: _userProfile.bikeModel,
-                                bikeCompany: _userProfile.bikeCompany,
-                                profileImage: _userProfile.profileImage,
-                              );
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Name saved')),
-                            );
-                          },
-                        ),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.person),
+                        suffixIcon: Icon(Icons.edit),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _userProfile.name = value;
+                        });
+                      },
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -850,46 +897,168 @@ class _MainScreenState extends State<MainScreen>
               ),
             ),
             const SizedBox(height: 16),
+
+            // Bike Information Card
             Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'BIKE INFORMATION',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: DropdownButtonFormField<String>(
+                            value: _userProfile.bikeCompany,
+                            decoration: InputDecoration(
+                              labelText: 'Brand',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.branding_watermark),
+                            ),
+                            items: bikeModelsByBrand.keys.map((String brand) {
+                              return DropdownMenuItem(
+                                value: brand,
+                                child: Text(brand),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _userProfile.bikeCompany = newValue!;
+                                _userProfile.bikeModel =
+                                    bikeModelsByBrand[newValue]!.first;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          flex: 3,
+                          child: DropdownButtonFormField<String>(
+                            value: _userProfile.bikeModel,
+                            decoration: InputDecoration(
+                              labelText: 'Model',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.motorcycle),
+                            ),
+                            items: bikeModelsByBrand[_userProfile.bikeCompany]!
+                                .map((String model) {
+                              return DropdownMenuItem(
+                                value: model,
+                                child: Text(model),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _userProfile.bikeModel = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (_userProfile.bikeModel == 'Custom Bike')
+                      Column(
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: _pickBikeImage,
+                            icon: Icon(Icons.photo_camera),
+                            label: Text('Upload Bike Photo'),
+                          ),
+                          const SizedBox(height: 8),
+                          if (_userProfile.customBikeImage != null)
+                            Container(
+                              height: 150,
+                              margin: const EdgeInsets.only(top: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image:
+                                      FileImage(_userProfile.customBikeImage!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Purchase History Card
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'PURCHASE HISTORY',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
                     _purchasedItems.isEmpty
-                        ? const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('No purchases yet'),
+                        ? Column(
+                            children: [
+                              Icon(Icons.history,
+                                  size: 48, color: Colors.grey[400]),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No purchases yet',
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                            ],
                           )
                         : Column(
-                            children: _purchasedItems
-                                .map((item) => ListTile(
-                                      leading: Container(
-                                        width: 40,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          color: item.color.withOpacity(0.2),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Center(
-                                            child: Icon(Icons.flash_on,
-                                                color: item.color)),
-                                      ),
-                                      title: Text(item.name),
-                                      subtitle: Text(
-                                          '\$${item.price.toStringAsFixed(2)}'),
-                                      trailing: Text(item.company,
-                                          style: const TextStyle(fontSize: 12)),
-                                    ))
-                                .toList(),
+                            children: _purchasedItems.map((item) {
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: item.color.withOpacity(0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child:
+                                      Icon(Icons.flash_on, color: item.color),
+                                ),
+                                title: Text(item.name),
+                                subtitle: Text(
+                                  '${item.company} • \$${item.price.toStringAsFixed(2)}',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                trailing: Text(
+                                  'Purchased',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                   ],
                 ),
@@ -1215,11 +1384,12 @@ class CalibrationFile {
 }
 
 class UserProfile {
-  final String name;
+  String name;
   final String email;
-  final String bikeModel;
-  final String bikeCompany;
-  final String profileImage;
+  String bikeModel;
+  String bikeCompany;
+  String profileImage;
+  File? customBikeImage;
 
   UserProfile({
     required this.name,
@@ -1227,6 +1397,7 @@ class UserProfile {
     required this.bikeModel,
     required this.bikeCompany,
     required this.profileImage,
+    this.customBikeImage,
   });
 }
 
