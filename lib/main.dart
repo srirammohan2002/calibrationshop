@@ -364,13 +364,10 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Widget _buildShopTab() {
-    final compatibleCalibrations = bikeCompanies
-        .expand((company) => company.calibrations.where(
-              (cal) =>
-                  cal.compatibleModels.isEmpty ||
-                  cal.compatibleModels.contains(_userProfile.bikeModel),
-            ))
-        .toList();
+    // Get all calibrations for the user's selected company
+    final companyCalibrations = bikeCompanies
+        .firstWhere((company) => company.name == _userProfile.bikeCompany)
+        .calibrations;
 
     return DefaultTabController(
       length: 2,
@@ -391,17 +388,19 @@ class _MainScreenState extends State<MainScreen>
           Expanded(
             child: TabBarView(
               children: [
-                // Companies view
-                ListView.builder(
-                  itemCount: bikeCompanies.length,
-                  itemBuilder: (context, index) {
-                    final company = bikeCompanies[index];
-                    return ExpansionTile(
+                // Companies view - showing all calibrations from selected company
+                ListView(
+                  children: [
+                    ExpansionTile(
+                      initiallyExpanded: true,
                       leading: CircleAvatar(
-                        backgroundImage: AssetImage(company.logo),
+                        backgroundImage: AssetImage(bikeCompanies
+                            .firstWhere(
+                                (c) => c.name == _userProfile.bikeCompany)
+                            .logo),
                       ),
                       title: Text(
-                        company.name,
+                        _userProfile.bikeCompany,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       children: [
@@ -417,22 +416,29 @@ class _MainScreenState extends State<MainScreen>
                               mainAxisSpacing: 16,
                               childAspectRatio: 0.75,
                             ),
-                            itemCount: company.calibrations.length,
-                            itemBuilder: (context, calIndex) {
+                            itemCount: companyCalibrations.length,
+                            itemBuilder: (context, index) {
                               return CalibrationCard(
-                                file: company.calibrations[calIndex],
+                                file: companyCalibrations[index],
                                 onPurchase: () =>
-                                    _addToCart(company.calibrations[calIndex]),
+                                    _addToCart(companyCalibrations[index]),
                               );
                             },
                           ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ],
                 ),
-                // Personalized recommendations
-                compatibleCalibrations.isEmpty
+
+                // "For Your Bike" tab still shows only compatible calibrations
+                companyCalibrations
+                        .where((cal) =>
+                            cal.compatibleModels.isEmpty ||
+                            cal.compatibleModels
+                                .contains(_userProfile.bikeModel))
+                        .toList()
+                        .isEmpty
                     ? const Center(
                         child: Text(
                             'No compatible calibrations found for your bike'))
@@ -448,14 +454,26 @@ class _MainScreenState extends State<MainScreen>
                                 mainAxisSpacing: 16,
                                 childAspectRatio: 0.75,
                               ),
-                              delegate:
-                                  SliverChildBuilderDelegate((context, index) {
+                              delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                final compatibleCals = companyCalibrations
+                                    .where((cal) =>
+                                        cal.compatibleModels.isEmpty ||
+                                        cal.compatibleModels
+                                            .contains(_userProfile.bikeModel))
+                                    .toList();
                                 return CalibrationCard(
-                                  file: compatibleCalibrations[index],
+                                  file: compatibleCals[index],
                                   onPurchase: () =>
-                                      _addToCart(compatibleCalibrations[index]),
+                                      _addToCart(compatibleCals[index]),
                                 ).animate().fadeIn(delay: (100 * index).ms);
-                              }, childCount: compatibleCalibrations.length),
+                              },
+                                  childCount: companyCalibrations
+                                      .where((cal) =>
+                                          cal.compatibleModels.isEmpty ||
+                                          cal.compatibleModels
+                                              .contains(_userProfile.bikeModel))
+                                      .length),
                             ),
                           ),
                         ],
@@ -1311,6 +1329,7 @@ class _MainScreenState extends State<MainScreen>
           profileImage: _userProfile.profileImage,
         );
       });
+      _tabController.animateTo(0);
     }
   }
 
