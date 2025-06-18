@@ -75,6 +75,11 @@ flutter:
     #- assets/app_bar_bg.jpg
     - assets/track_mode.png
     - assets/winter_mode.png
+    - assets/bajaj.png
+    - assets/harley.png
+    - assets/ktm.png
+    - assets/yamaha.png
+    - assets/re.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
