@@ -14,7 +14,7 @@ class CalibrationShopApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Calibration Pro',
+      title: 'RideWave Pro',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -30,14 +30,12 @@ class CalibrationShopApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: const CardThemeData(
-          // Changed from CardTheme to CardThemeData
+        cardTheme: const CardTheme(
           elevation: 2,
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
-          color: Colors.white,
         ),
       ),
       home: const MainScreen(),
@@ -62,68 +60,253 @@ class _MainScreenState extends State<MainScreen>
 
   final List<CalibrationFile> _cartItems = [];
   final List<CalibrationFile> _purchasedItems = [];
+  final List<CalibrationFile> _activeCalibrations = [];
 
-  final List<CalibrationFile> calibrationFiles = [
-    CalibrationFile(
+  UserProfile _userProfile = UserProfile(
+    name: 'sriram',
+    email: 'sriramm@endurance.co.in',
+    bikeModel: 'Pulsar NS200',
+    bikeCompany: 'Bajaj',
+    profileImage: 'assets/user.png',
+  );
+
+  final List<BikeCompany> bikeCompanies = [
+    BikeCompany(
       id: '1',
-      name: 'RAIN MODE',
-      description: 'Enhanced wet traction & stability control',
-      price: 5,
-      hexUrl:
-          'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Rain_cal.hex',
-      image: 'assets/rain_mode.png',
-      color: const Color(0xFF64B5F6),
+      name: 'Bajaj',
+      logo: 'assets/bajaj.png',
+      calibrations: [
+        CalibrationFile(
+          id: 'b1',
+          name: 'RAIN MODE',
+          description: 'Enhanced wet traction & stability control',
+          price: 0,
+          hexUrl:
+              'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Rain_cal.hex',
+          image: 'assets/rain_mode.png',
+          color: const Color(0xFF64B5F6),
+          company: 'Bajaj',
+          isPremium: false,
+          compatibleModels: ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200'],
+        ),
+        CalibrationFile(
+          id: 'b2',
+          name: 'ROAD MODE',
+          description: 'Max performance for street riding',
+          price: 0,
+          hexUrl:
+              'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Road_cal.hex',
+          image: 'assets/road_mode.png',
+          color: const Color(0xFFE57373),
+          company: 'Bajaj',
+          isPremium: false,
+          compatibleModels: ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200'],
+        ),
+        CalibrationFile(
+          id: 'b3',
+          name: 'OFF-ROAD MODE',
+          description: 'Optimized for rough terrain',
+          price: 0,
+          hexUrl:
+              'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Off_Road_cal.hex',
+          image: 'assets/offroad_mode.png',
+          color: const Color(0xFF81C784),
+          company: 'Bajaj',
+          isPremium: false,
+          compatibleModels: ['Pulsar NS200', 'Dominar 400'],
+        ),
+        CalibrationFile(
+          id: 'b4',
+          name: 'TRACK MODE PRO',
+          description: 'Race track optimized with advanced tuning',
+          price: 12.99,
+          hexUrl: 'https://...track_pro.hex',
+          image: 'assets/track_mode.png',
+          color: const Color(0xFFFF5252),
+          company: 'Bajaj',
+          isPremium: true,
+          compatibleModels: ['Pulsar RS200', 'Dominar 400'],
+        ),
+      ],
     ),
-    CalibrationFile(
+    BikeCompany(
       id: '2',
-      name: 'ROAD MODE',
-      description: 'Max performance',
-      price: 6,
-      hexUrl:
-          'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Road_cal.hex',
-      image: 'assets/sports_mode.png',
-      color: const Color(0xFFE57373),
+      name: 'Royal Enfield',
+      logo: 'assets/re.png',
+      calibrations: [
+        CalibrationFile(
+          id: 're1',
+          name: 'CLASSIC CRUISE',
+          description: 'Smooth throttle for relaxed cruising',
+          price: 0,
+          hexUrl: 'https://...classic.hex',
+          image: 'assets/classic_mode.png',
+          color: const Color(0xFF9575CD),
+          company: 'Royal Enfield',
+          isPremium: false,
+          compatibleModels: ['Classic 350', 'Meteor 350'],
+        ),
+        CalibrationFile(
+          id: 're2',
+          name: 'HIMALAYAN EXPLORE',
+          description: 'Optimized for high altitude performance',
+          price: 8.99,
+          hexUrl: 'https://...himalayan.hex',
+          image: 'assets/adventure_mode.png',
+          color: const Color(0xFF4DB6AC),
+          company: 'Royal Enfield',
+          isPremium: true,
+          compatibleModels: ['Himalayan 450', 'Himalayan 411'],
+        ),
+        CalibrationFile(
+          id: 're3',
+          name: 'INTERCEPTOR POWER',
+          description: 'Enhanced mid-range torque',
+          price: 9.99,
+          hexUrl: 'https://...interceptor.hex',
+          image: 'assets/power_mode.png',
+          color: const Color(0xFFFF8A65),
+          company: 'Royal Enfield',
+          isPremium: true,
+          compatibleModels: ['Interceptor 650', 'Continental GT'],
+        ),
+      ],
     ),
-    CalibrationFile(
+    BikeCompany(
       id: '3',
-      name: 'OFF-ROAD MODE',
-      description: 'Fuel efficiency optimized',
-      price: 5.99,
-      hexUrl:
-          'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Off_Road_cal.hex',
-      image: 'assets/eco_mode.png',
-      color: const Color(0xFF81C784),
+      name: 'KTM',
+      logo: 'assets/ktm.png',
+      calibrations: [
+        CalibrationFile(
+          id: 'ktm1',
+          name: 'SUPERMOTO AGGRESSIVE',
+          description: 'Sharp throttle response for aggressive riding',
+          price: 14.99,
+          hexUrl: 'https://...supermoto.hex',
+          image: 'assets/aggressive_mode.png',
+          color: const Color(0xFFF44336),
+          company: 'KTM',
+          isPremium: true,
+          compatibleModels: ['Duke 390', 'Duke 250', 'RC 390'],
+        ),
+        CalibrationFile(
+          id: 'ktm2',
+          name: 'TRACK SLICK',
+          description: 'Optimized for track days with slick tires',
+          price: 15.99,
+          hexUrl: 'https://...trackslick.hex',
+          image: 'assets/track_slick.png',
+          color: const Color(0xFFFF9800),
+          company: 'KTM',
+          isPremium: true,
+          compatibleModels: ['RC 390', 'RC 200'],
+        ),
+        CalibrationFile(
+          id: 'ktm3',
+          name: 'STREET MODE',
+          description: 'Balanced performance for daily riding',
+          price: 0,
+          hexUrl: 'https://...street.hex',
+          image: 'assets/street_mode.png',
+          color: const Color(0xFF2196F3),
+          company: 'KTM',
+          isPremium: false,
+          compatibleModels: ['Duke 390', 'Duke 250', 'RC 390'],
+        ),
+      ],
     ),
-  ];
-
-  final List<Map<String, dynamic>> suspensionModes = [
-    {
-      'name': 'MODE 0',
-      'description': 'Soft suspension for maximum comfort',
-      'icon': Icons.airline_seat_recline_normal,
-      'color': Colors.blue,
-      'mode': 'MODE 0'
-    },
-    {
-      'name': 'MODE 1',
-      'description': 'Balanced ride quality and handling',
-      'icon': Icons.directions_car,
-      'color': Colors.green,
-      'mode': 'MODE 1'
-    },
-    {
-      'name': 'MODE 2',
-      'description': 'Aggressive driving',
-      'icon': Icons.speed,
-      'color': Colors.red,
-      'mode': 'MODE 2'
-    },
+    BikeCompany(
+      id: '4',
+      name: 'Yamaha',
+      logo: 'assets/yamaha.png',
+      calibrations: [
+        CalibrationFile(
+          id: 'yam1',
+          name: 'R-SERIES TRACK',
+          description: 'Race-inspired tuning for R-series bikes',
+          price: 11.99,
+          hexUrl: 'https://...rseries.hex',
+          image: 'assets/rseries_mode.png',
+          color: const Color(0xFFE91E63),
+          company: 'Yamaha',
+          isPremium: true,
+          compatibleModels: ['R15 V4', 'R7', 'MT-15'],
+        ),
+        CalibrationFile(
+          id: 'yam2',
+          name: 'ECO COMMUTE',
+          description: 'Fuel efficiency optimized for daily commuting',
+          price: 0,
+          hexUrl: 'https://...eco.hex',
+          image: 'assets/eco_mode.png',
+          color: const Color(0xFF8BC34A),
+          company: 'Yamaha',
+          isPremium: false,
+          compatibleModels: ['FZ-S', 'FZ-X', 'MT-15'],
+        ),
+        CalibrationFile(
+          id: 'yam3',
+          name: 'MT POWER',
+          description: 'Enhanced torque for wheelie control',
+          price: 12.99,
+          hexUrl: 'https://...mtpower.hex',
+          image: 'assets/mt_mode.png',
+          color: const Color(0xFF9C27B0),
+          company: 'Yamaha',
+          isPremium: true,
+          compatibleModels: ['MT-15', 'MT-03'],
+        ),
+      ],
+    ),
+    BikeCompany(
+      id: '5',
+      name: 'Harley-Davidson',
+      logo: 'assets/harley.png',
+      calibrations: [
+        CalibrationFile(
+          id: 'hd1',
+          name: 'CRUISER COMFORT',
+          description: 'Smooth power delivery for long rides',
+          price: 0,
+          hexUrl: 'https://...cruiser.hex',
+          image: 'assets/cruiser_mode.png',
+          color: const Color(0xFF795548),
+          company: 'Harley-Davidson',
+          isPremium: false,
+          compatibleModels: ['Street 750', 'Iron 883'],
+        ),
+        CalibrationFile(
+          id: 'hd2',
+          name: 'V-TWIN THUNDER',
+          description: 'Aggressive map for maximum V-twin rumble',
+          price: 16.99,
+          hexUrl: 'https://...vtwin.hex',
+          image: 'assets/vtwin_mode.png',
+          color: const Color(0xFF3F51B5),
+          company: 'Harley-Davidson',
+          isPremium: true,
+          compatibleModels: ['Fat Boy', 'Softail'],
+        ),
+        CalibrationFile(
+          id: 'hd3',
+          name: 'TOURING PRO',
+          description: 'Optimized for loaded touring with pillion',
+          price: 14.99,
+          hexUrl: 'https://...touring.hex',
+          image: 'assets/touring_mode.png',
+          color: const Color(0xFF607D8B),
+          company: 'Harley-Davidson',
+          isPremium: true,
+          compatibleModels: ['Road King', 'Street Glide'],
+        ),
+      ],
+    ),
   ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
   }
 
   @override
@@ -136,7 +319,13 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RIDEWAVE'),
+        title: const Text('RIDEWAVE PRO'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            onPressed: () => _tabController.animateTo(5),
+          ),
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
@@ -146,6 +335,7 @@ class _MainScreenState extends State<MainScreen>
           _buildAbsTab(),
           _buildSuspensionTab(),
           _buildUploadTab(),
+          _buildProfileTab(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -164,6 +354,7 @@ class _MainScreenState extends State<MainScreen>
             Tab(icon: Icon(Icons.flash_on)),
             Tab(icon: Icon(Icons.car_repair)),
             Tab(icon: Icon(Icons.upload)),
+            Tab(icon: Icon(Icons.person)),
           ],
         ),
       ),
@@ -171,32 +362,124 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Widget _buildShopTab() {
-    return CustomScrollView(
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.all(16),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75,
+    final compatibleCalibrations = bikeCompanies
+        .expand((company) => company.calibrations.where(
+              (cal) =>
+                  cal.compatibleModels.isEmpty ||
+                  cal.compatibleModels.contains(_userProfile.bikeModel),
+            ))
+        .toList();
+
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            child: const TabBar(
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              tabs: [
+                Tab(text: 'By Company'),
+                Tab(text: 'For Your Bike'),
+              ],
             ),
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return CalibrationCard(
-                file: calibrationFiles[index],
-                onPurchase: () => _addToCart(calibrationFiles[index]),
-              ).animate().fadeIn(delay: (100 * index).ms);
-            }, childCount: calibrationFiles.length),
           ),
-        ),
-      ],
+          Expanded(
+            child: TabBarView(
+              children: [
+                // Companies view
+                ListView.builder(
+                  itemCount: bikeCompanies.length,
+                  itemBuilder: (context, index) {
+                    final company = bikeCompanies[index];
+                    return ExpansionTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage(company.logo),
+                      ),
+                      title: Text(
+                        company.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              childAspectRatio: 0.75,
+                            ),
+                            itemCount: company.calibrations.length,
+                            itemBuilder: (context, calIndex) {
+                              return CalibrationCard(
+                                file: company.calibrations[calIndex],
+                                onPurchase: () =>
+                                    _addToCart(company.calibrations[calIndex]),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                // Personalized recommendations
+                compatibleCalibrations.isEmpty
+                    ? const Center(
+                        child: Text(
+                            'No compatible calibrations found for your bike'))
+                    : CustomScrollView(
+                        slivers: [
+                          SliverPadding(
+                            padding: const EdgeInsets.all(16),
+                            sliver: SliverGrid(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 0.75,
+                              ),
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
+                                return CalibrationCard(
+                                  file: compatibleCalibrations[index],
+                                  onPurchase: () =>
+                                      _addToCart(compatibleCalibrations[index]),
+                                ).animate().fadeIn(delay: (100 * index).ms);
+                              }, childCount: compatibleCalibrations.length),
+                            ),
+                          ),
+                        ],
+                      ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildCartTab() {
     return _cartItems.isEmpty
-        ? const Center(child: Text('Your cart is empty'))
+        ? const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.shopping_cart_outlined,
+                    size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text('Your cart is empty',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
+              ],
+            ),
+          )
         : Column(
             children: [
               Expanded(
@@ -206,6 +489,9 @@ class _MainScreenState extends State<MainScreen>
                   itemBuilder: (context, index) {
                     final item = _cartItems[index];
                     return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: ListTile(
                         leading: Container(
                           width: 50,
@@ -218,9 +504,16 @@ class _MainScreenState extends State<MainScreen>
                               child: Icon(Icons.flash_on, color: item.color)),
                         ),
                         title: Text(item.name),
-                        subtitle: Text('\$${item.price.toStringAsFixed(2)}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('\$${item.price.toStringAsFixed(2)}'),
+                            Text(item.company,
+                                style: const TextStyle(fontSize: 12)),
+                          ],
+                        ),
                         trailing: IconButton(
-                          icon: const Icon(Icons.delete),
+                          icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () => _removeFromCart(index),
                         ),
                       ),
@@ -230,16 +523,33 @@ class _MainScreenState extends State<MainScreen>
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: ElevatedButton.icon(
-                  onPressed: _checkout,
-                  icon: const Icon(Icons.payment),
-                  label: const Text('CHECKOUT'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Total:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          '\$${_cartItems.fold(0.0, (double sum, item) => sum + item.price).toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: _checkout,
+                      icon: const Icon(Icons.payment),
+                      label: const Text('CHECKOUT'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -247,71 +557,105 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Widget _buildAbsTab() {
-    return _purchasedItems.isEmpty
-        ? const Center(child: Text('No purchased calibrations'))
-        : GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.8,
+    return Column(
+      children: [
+        if (_activeCalibrations.isNotEmpty) ...[
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(
+              'ACTIVE CALIBRATIONS',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            itemCount: _purchasedItems.length,
-            itemBuilder: (context, index) {
-              return Card(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () => _flashToEsp32(_purchasedItems[index]),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                _purchasedItems[index].color.withOpacity(0.2),
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(16),
-                            ),
-                          ),
-                          child: Center(
-                            child: Icon(Icons.flash_on,
-                                size: 60, color: _purchasedItems[index].color),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _purchasedItems[index].name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  _flashToEsp32(_purchasedItems[index]),
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(double.infinity, 40),
-                                backgroundColor: _purchasedItems[index].color,
-                              ),
-                              child: const Text('FLASH',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          ),
+          ..._activeCalibrations
+              .map((item) => _buildCalibrationItem(item, true)),
+        ],
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            'PURCHASED CALIBRATIONS',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
+        _purchasedItems.isEmpty
+            ? const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('No purchased calibrations'),
+              )
+            : Column(
+                children: _purchasedItems
+                    .map((item) => _buildCalibrationItem(item,
+                        _activeCalibrations.any((cal) => cal.id == item.id)))
+                    .toList(),
+              ),
+      ],
+    );
+  }
+
+  Widget _buildCalibrationItem(CalibrationFile file, bool isActive) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: ListTile(
+        leading: Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: file.color.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: Center(child: Icon(Icons.flash_on, color: file.color)),
+        ),
+        title: Text(file.name),
+        subtitle: Text(file.company),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: () => _deleteCalibration(file),
+            ),
+            ElevatedButton(
+              onPressed: () => _flashToEsp32(file),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: file.color,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('FLASH'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _deleteCalibration(CalibrationFile file) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete ${file.name}?'),
+        content:
+            Text('This will remove the calibration from your purchased items.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _purchasedItems.removeWhere((item) => item.id == file.id);
+                _activeCalibrations.removeWhere((item) => item.id == file.id);
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('${file.name} deleted')),
               );
             },
-          );
+            child: Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSuspensionTab() {
@@ -357,9 +701,9 @@ class _MainScreenState extends State<MainScreen>
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: suspensionModes.length,
+            itemCount: _suspensionModes.length,
             itemBuilder: (context, index) {
-              final mode = suspensionModes[index];
+              final mode = _suspensionModes[index];
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -447,6 +791,116 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
+  Widget _buildProfileTab() {
+    TextEditingController nameController =
+        TextEditingController(text: _userProfile.name);
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage(_userProfile.profileImage),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Rider Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.save),
+                          onPressed: () {
+                            setState(() {
+                              _userProfile = UserProfile(
+                                name: nameController.text,
+                                email: _userProfile.email,
+                                bikeModel: _userProfile.bikeModel,
+                                bikeCompany: _userProfile.bikeCompany,
+                                profileImage: _userProfile.profileImage,
+                              );
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Name saved')),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _userProfile.email,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'PURCHASE HISTORY',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _purchasedItems.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('No purchases yet'),
+                          )
+                        : Column(
+                            children: _purchasedItems
+                                .map((item) => ListTile(
+                                      leading: Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: item.color.withOpacity(0.2),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                            child: Icon(Icons.flash_on,
+                                                color: item.color)),
+                                      ),
+                                      title: Text(item.name),
+                                      subtitle: Text(
+                                          '\$${item.price.toStringAsFixed(2)}'),
+                                      trailing: Text(item.company,
+                                          style: const TextStyle(fontSize: 12)),
+                                    ))
+                                .toList(),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _addToCart(CalibrationFile file) {
     setState(() {
       _cartItems.add(file);
@@ -493,9 +947,8 @@ class _MainScreenState extends State<MainScreen>
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: Text('Preparing ${file.name}...'),
+        content: Text('Flashing ${file.name}...'),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
@@ -509,10 +962,6 @@ class _MainScreenState extends State<MainScreen>
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text('${file.name} flashed successfully!'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -523,10 +972,6 @@ class _MainScreenState extends State<MainScreen>
       scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -630,6 +1075,113 @@ class _MainScreenState extends State<MainScreen>
       );
     }
   }
+
+  void _toggleCalibration(CalibrationFile file, bool enable) {
+    setState(() {
+      if (enable) {
+        _activeCalibrations.add(file);
+        _flashToEsp32(file);
+      } else {
+        _activeCalibrations.removeWhere((cal) => cal.id == file.id);
+        _disableCalibration(file);
+      }
+    });
+  }
+
+  Future<void> _disableCalibration(CalibrationFile file) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      final response = await http.post(
+        Uri.parse('http://${_ipController.text}/disable'),
+        body: {'calibration_id': file.id},
+      );
+
+      if (response.statusCode == 200) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text('${file.name} disabled'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      } else {
+        throw Exception('Failed to disable calibration');
+      }
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text('Error disabling calibration: $e'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _changeBikeInfo() async {
+    final result = await showDialog<Map<String, String>>(
+      context: context,
+      builder: (context) => BikeSelectionDialog(
+        currentCompany: _userProfile.bikeCompany,
+        currentModel: _userProfile.bikeModel,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        _userProfile = UserProfile(
+          name: _userProfile.name,
+          email: _userProfile.email,
+          bikeCompany: result['company']!,
+          bikeModel: result['model']!,
+          profileImage: _userProfile.profileImage,
+        );
+      });
+    }
+  }
+
+  final List<Map<String, dynamic>> _suspensionModes = [
+    {
+      'name': 'MODE 0',
+      'description': 'Soft suspension for maximum comfort',
+      'icon': Icons.airline_seat_recline_normal,
+      'color': Colors.blue,
+      'mode': 'MODE 0'
+    },
+    {
+      'name': 'MODE 1',
+      'description': 'Balanced ride quality and handling',
+      'icon': Icons.directions_car,
+      'color': Colors.green,
+      'mode': 'MODE 1'
+    },
+    {
+      'name': 'MODE 2',
+      'description': 'Aggressive driving',
+      'icon': Icons.speed,
+      'color': Colors.red,
+      'mode': 'MODE 2'
+    },
+  ];
+}
+
+class BikeCompany {
+  final String id;
+  final String name;
+  final String logo;
+  final List<CalibrationFile> calibrations;
+
+  BikeCompany({
+    required this.id,
+    required this.name,
+    required this.logo,
+    required this.calibrations,
+  });
 }
 
 class CalibrationFile {
@@ -640,6 +1192,9 @@ class CalibrationFile {
   final String hexUrl;
   final String image;
   final Color color;
+  final String company;
+  final bool isPremium;
+  final List<String> compatibleModels;
   final double rating;
   final int downloads;
 
@@ -651,8 +1206,27 @@ class CalibrationFile {
     required this.hexUrl,
     required this.image,
     required this.color,
+    required this.company,
+    this.isPremium = false,
+    this.compatibleModels = const [],
     this.rating = 4.5,
     this.downloads = 1000,
+  });
+}
+
+class UserProfile {
+  final String name;
+  final String email;
+  final String bikeModel;
+  final String bikeCompany;
+  final String profileImage;
+
+  UserProfile({
+    required this.name,
+    required this.email,
+    required this.bikeModel,
+    required this.bikeCompany,
+    required this.profileImage,
   });
 }
 
@@ -696,8 +1270,34 @@ class CalibrationCard extends StatelessWidget {
                       top: Radius.circular(16),
                     ),
                   ),
-                  child: Center(
-                    child: Icon(Icons.flash_on, size: 60, color: file.color),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child:
+                            Icon(Icons.flash_on, size: 60, color: file.color),
+                      ),
+                      if (file.isPremium)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'PREMIUM',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -716,7 +1316,14 @@ class CalibrationCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  Text(
+                    file.company,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -726,19 +1333,32 @@ class CalibrationCard extends StatelessWidget {
                         style: const TextStyle(fontSize: 12),
                       ),
                       const Spacer(),
-                      const Icon(
-                        Icons.attach_money,
-                        color: Colors.green,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        file.price.toStringAsFixed(2),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                      if (file.price == 0)
+                        const Text(
+                          'FREE',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        )
+                      else
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.attach_money,
+                              color: Colors.green,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              file.price.toStringAsFixed(2),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -747,14 +1367,15 @@ class CalibrationCard extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: onPurchase,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor:
+                            file.isPremium ? Colors.deepPurple : Colors.blue,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text('ADD TO CART'),
+                      child: Text(file.isPremium ? 'BUY NOW' : 'ADD TO CART'),
                     ),
                   ),
                 ],
@@ -793,8 +1414,33 @@ class CalibrationDetails extends StatelessWidget {
                 width: double.infinity,
                 height: 250,
                 color: file.color.withOpacity(0.2),
-                child: Center(
-                  child: Icon(Icons.flash_on, size: 100, color: file.color),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Icon(Icons.flash_on, size: 100, color: file.color),
+                    ),
+                    if (file.isPremium)
+                      Positioned(
+                        top: 16,
+                        right: 16,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: const Text(
+                            'PREMIUM',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -807,11 +1453,13 @@ class CalibrationDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$${file.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
+                        file.price == 0
+                            ? 'FREE'
+                            : '\$${file.price.toStringAsFixed(2)}',
+                        style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: file.price == 0 ? Colors.green : Colors.blue,
                         ),
                       ),
                       Chip(
@@ -820,8 +1468,32 @@ class CalibrationDetails extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'by ${file.company}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   Text(file.description, style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'COMPATIBLE MODELS',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: file.compatibleModels
+                        .map((model) => Chip(
+                              label: Text(model),
+                              backgroundColor: Colors.blue.withOpacity(0.1),
+                            ))
+                        .toList(),
+                  ),
                   const SizedBox(height: 24),
                   const Text(
                     'FEATURES',
@@ -861,6 +1533,7 @@ class CalibrationDetails extends StatelessWidget {
       _buildFeatureItem('Custom Throttle Mapping'),
       _buildFeatureItem('Optimized Fuel Efficiency'),
       _buildFeatureItem('Real-time Monitoring'),
+      _buildFeatureItem('Advanced Traction Control'),
     ];
   }
 
@@ -874,6 +1547,112 @@ class CalibrationDetails extends StatelessWidget {
           Text(text),
         ],
       ),
+    );
+  }
+}
+
+class BikeSelectionDialog extends StatefulWidget {
+  final String currentCompany;
+  final String currentModel;
+
+  const BikeSelectionDialog({
+    super.key,
+    required this.currentCompany,
+    required this.currentModel,
+  });
+
+  @override
+  State<BikeSelectionDialog> createState() => _BikeSelectionDialogState();
+}
+
+class _BikeSelectionDialogState extends State<BikeSelectionDialog> {
+  late String _selectedCompany;
+  late String _selectedModel;
+
+  final Map<String, List<String>> _bikeModels = {
+    'Bajaj': ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200', 'Avenger 220'],
+    'Royal Enfield': [
+      'Classic 350',
+      'Meteor 350',
+      'Himalayan 450',
+      'Interceptor 650'
+    ],
+    'KTM': ['Duke 390', 'Duke 250', 'RC 390', 'RC 200'],
+    'Yamaha': ['R15 V4', 'MT-15', 'FZ-S', 'FZ-X'],
+    'Harley-Davidson': ['Street 750', 'Iron 883', 'Fat Boy', 'Road King'],
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCompany = widget.currentCompany;
+    _selectedModel = widget.currentModel;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Your Bike'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DropdownButtonFormField<String>(
+            value: _selectedCompany,
+            items: _bikeModels.keys
+                .map((company) => DropdownMenuItem(
+                      value: company,
+                      child: Text(company),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedCompany = value!;
+                _selectedModel = _bikeModels[value]!.first;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Manufacturer',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          DropdownButtonFormField<String>(
+            value: _selectedModel,
+            items: _bikeModels[_selectedCompany]!
+                .map((model) => DropdownMenuItem(
+                      value: model,
+                      child: Text(model),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedModel = value!;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Model',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, {
+            'company': _selectedCompany,
+            'model': _selectedModel,
+          }),
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }
