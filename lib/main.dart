@@ -34,7 +34,7 @@ class CalibrationShopApp extends StatelessWidget {
           elevation: 2,
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
