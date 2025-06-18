@@ -30,11 +30,11 @@ class CalibrationShopApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardTheme(
           elevation: 2,
           margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           color: Colors.white,
         ),
@@ -135,21 +135,7 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AUTOTUNE PRO'),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          labelColor: Colors.blue,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: Colors.blue,
-          tabs: const [
-            Tab(icon: Icon(Icons.shop), text: 'Shop'),
-            Tab(icon: Icon(Icons.shopping_cart), text: 'Cart'),
-            Tab(icon: Icon(Icons.flash_on), text: 'ABS'),
-            Tab(icon: Icon(Icons.car_repair), text: 'Suspension'),
-            Tab(icon: Icon(Icons.upload), text: 'Upload'),
-          ],
-        ),
+        title: const Text('RIDEWAVE'),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -160,6 +146,25 @@ class _MainScreenState extends State<MainScreen>
           _buildSuspensionTab(),
           _buildUploadTab(),
         ],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.grey.shade300)),
+        ),
+        child: TabBar(
+          controller: _tabController,
+          isScrollable: false,
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: Colors.blue,
+          tabs: const [
+            Tab(icon: Icon(Icons.shop)),
+            Tab(icon: Icon(Icons.shopping_cart)),
+            Tab(icon: Icon(Icons.flash_on)),
+            Tab(icon: Icon(Icons.car_repair)),
+            Tab(icon: Icon(Icons.upload)),
+          ],
+        ),
       ),
     );
   }
@@ -180,7 +185,6 @@ class _MainScreenState extends State<MainScreen>
               return CalibrationCard(
                 file: calibrationFiles[index],
                 onPurchase: () => _addToCart(calibrationFiles[index]),
-                onFlash: () => _flashToEsp32(calibrationFiles[index]),
               ).animate().fadeIn(delay: (100 * index).ms);
             }, childCount: calibrationFiles.length),
           ),
@@ -213,7 +217,7 @@ class _MainScreenState extends State<MainScreen>
                               child: Icon(Icons.flash_on, color: item.color)),
                         ),
                         title: Text(item.name),
-                        subtitle: Text('\$Rs{item.price.toStringAsFixed(2)}'),
+                        subtitle: Text('\$${item.price.toStringAsFixed(2)}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () => _removeFromCart(index),
@@ -477,7 +481,7 @@ class _MainScreenState extends State<MainScreen>
         content: Text('Purchase successful!'),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
       ),
@@ -654,13 +658,11 @@ class CalibrationFile {
 class CalibrationCard extends StatelessWidget {
   final CalibrationFile file;
   final VoidCallback onPurchase;
-  final VoidCallback onFlash;
 
   const CalibrationCard({
     super.key,
     required this.file,
     required this.onPurchase,
-    required this.onFlash,
   });
 
   @override
@@ -739,32 +741,20 @@ class CalibrationCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: onFlash,
-                          icon: const Icon(Icons.flash_on, size: 18),
-                          label: const Text('FLASH'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: onPurchase,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        onPressed: onPurchase,
-                        icon: const Icon(Icons.shopping_cart),
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.grey[200],
-                        ),
-                      ),
-                    ],
+                      child: const Text('ADD TO CART'),
+                    ),
                   ),
                 ],
               ),
