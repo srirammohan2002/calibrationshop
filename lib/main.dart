@@ -30,7 +30,7 @@ class CalibrationShopApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           elevation: 2,
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -42,8 +42,6 @@ class CalibrationShopApp extends StatelessWidget {
     );
   }
 }
-
-//borderRadius: BorderRadius.all(Radius.circular(16)),
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -90,6 +88,7 @@ class _MainScreenState extends State<MainScreen>
           company: 'Bajaj',
           isPremium: false,
           compatibleModels: ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200'],
+          suspensionMode: '1',
         ),
         CalibrationFile(
           id: 'b2',
@@ -103,6 +102,7 @@ class _MainScreenState extends State<MainScreen>
           company: 'Bajaj',
           isPremium: false,
           compatibleModels: ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200'],
+          suspensionMode: '0',
         ),
         CalibrationFile(
           id: 'b3',
@@ -116,17 +116,18 @@ class _MainScreenState extends State<MainScreen>
           company: 'Bajaj',
           isPremium: false,
           compatibleModels: ['Pulsar NS200', 'Dominar 400'],
+          suspensionMode: '2',
         ),
         CalibrationFile(
           id: 'b4',
           name: 'TRACK MODE PRO',
           description: 'Race track optimized with advanced tuning',
-          price: 12.99,
+          price: 150,
           hexUrl: 'https://...track_pro.hex',
           image: 'assets/track_mode.png',
           color: const Color(0xFFFF5252),
           company: 'Bajaj',
-          isPremium: true,
+          isPremium: true, // This is still marked as premium
           compatibleModels: ['Pulsar RS200', 'Dominar 400'],
         ),
       ],
@@ -137,41 +138,16 @@ class _MainScreenState extends State<MainScreen>
       logo: 'assets/re.png',
       calibrations: [
         CalibrationFile(
-          id: 're1',
-          name: 'CLASSIC CRUISE',
-          description: 'Smooth throttle for relaxed cruising',
-          price: 0,
-          hexUrl: 'https://...classic.hex',
-          image: 'assets/classic_mode.png',
-          color: const Color(0xFF9575CD),
-          company: 'Royal Enfield',
-          isPremium: false,
-          compatibleModels: ['Classic 350', 'Meteor 350'],
-        ),
-        CalibrationFile(
-          id: 're2',
-          name: 'HIMALAYAN EXPLORE',
-          description: 'Optimized for high altitude performance',
-          price: 8.99,
-          hexUrl: 'https://...himalayan.hex',
-          image: 'assets/adventure_mode.png',
-          color: const Color(0xFF4DB6AC),
-          company: 'Royal Enfield',
-          isPremium: true,
-          compatibleModels: ['Himalayan 450', 'Himalayan 411'],
-        ),
-        CalibrationFile(
-          id: 're3',
-          name: 'INTERCEPTOR POWER',
-          description: 'Enhanced mid-range torque',
-          price: 9.99,
-          hexUrl: 'https://...interceptor.hex',
-          image: 'assets/power_mode.png',
-          color: const Color(0xFFFF8A65),
-          company: 'Royal Enfield',
-          isPremium: true,
-          compatibleModels: ['Interceptor 650', 'Continental GT'],
-        ),
+            id: 're1',
+            name: 'CLASSIC CRUISE',
+            description: 'Smooth throttle for relaxed cruising',
+            price: 0,
+            hexUrl: 'https://...classic.hex',
+            image: 'assets/classic_mode.png',
+            color: const Color(0xFF9575CD),
+            company: 'Royal Enfield',
+            isPremium: false,
+            compatibleModels: ['Classic 350', 'Meteor 350']),
       ],
     ),
     BikeCompany(
@@ -180,127 +156,16 @@ class _MainScreenState extends State<MainScreen>
       logo: 'assets/ktm.png',
       calibrations: [
         CalibrationFile(
-          id: 'ktm1',
-          name: 'SUPERMOTO AGGRESSIVE',
-          description: 'Sharp throttle response for aggressive riding',
-          price: 14.99,
-          hexUrl: 'https://...supermoto.hex',
-          image: 'assets/aggressive_mode.png',
-          color: const Color(0xFFF44336),
-          company: 'KTM',
-          isPremium: true,
-          compatibleModels: ['Duke 390', 'Duke 250', 'RC 390'],
-        ),
-        CalibrationFile(
-          id: 'ktm2',
-          name: 'TRACK SLICK',
-          description: 'Optimized for track days with slick tires',
-          price: 15.99,
-          hexUrl: 'https://...trackslick.hex',
-          image: 'assets/track_slick.png',
-          color: const Color(0xFFFF9800),
-          company: 'KTM',
-          isPremium: true,
-          compatibleModels: ['RC 390', 'RC 200'],
-        ),
-        CalibrationFile(
-          id: 'ktm3',
-          name: 'STREET MODE',
-          description: 'Balanced performance for daily riding',
-          price: 0,
-          hexUrl: 'https://...street.hex',
-          image: 'assets/street_mode.png',
-          color: const Color(0xFF2196F3),
-          company: 'KTM',
-          isPremium: false,
-          compatibleModels: ['Duke 390', 'Duke 250', 'RC 390'],
-        ),
-      ],
-    ),
-    BikeCompany(
-      id: '4',
-      name: 'Yamaha',
-      logo: 'assets/yamaha.png',
-      calibrations: [
-        CalibrationFile(
-          id: 'yam1',
-          name: 'R-SERIES TRACK',
-          description: 'Race-inspired tuning for R-series bikes',
-          price: 11.99,
-          hexUrl: 'https://...rseries.hex',
-          image: 'assets/rseries_mode.png',
-          color: const Color(0xFFE91E63),
-          company: 'Yamaha',
-          isPremium: true,
-          compatibleModels: ['R15 V4', 'R7', 'MT-15'],
-        ),
-        CalibrationFile(
-          id: 'yam2',
-          name: 'ECO COMMUTE',
-          description: 'Fuel efficiency optimized for daily commuting',
-          price: 0,
-          hexUrl: 'https://...eco.hex',
-          image: 'assets/eco_mode.png',
-          color: const Color(0xFF8BC34A),
-          company: 'Yamaha',
-          isPremium: false,
-          compatibleModels: ['FZ-S', 'FZ-X', 'MT-15'],
-        ),
-        CalibrationFile(
-          id: 'yam3',
-          name: 'MT POWER',
-          description: 'Enhanced torque for wheelie control',
-          price: 12.99,
-          hexUrl: 'https://...mtpower.hex',
-          image: 'assets/mt_mode.png',
-          color: const Color(0xFF9C27B0),
-          company: 'Yamaha',
-          isPremium: true,
-          compatibleModels: ['MT-15', 'MT-03'],
-        ),
-      ],
-    ),
-    BikeCompany(
-      id: '5',
-      name: 'Harley-Davidson',
-      logo: 'assets/harley.png',
-      calibrations: [
-        CalibrationFile(
-          id: 'hd1',
-          name: 'CRUISER COMFORT',
-          description: 'Smooth power delivery for long rides',
-          price: 0,
-          hexUrl: 'https://...cruiser.hex',
-          image: 'assets/cruiser_mode.png',
-          color: const Color(0xFF795548),
-          company: 'Harley-Davidson',
-          isPremium: false,
-          compatibleModels: ['Street 750', 'Iron 883'],
-        ),
-        CalibrationFile(
-          id: 'hd2',
-          name: 'V-TWIN THUNDER',
-          description: 'Aggressive map for maximum V-twin rumble',
-          price: 16.99,
-          hexUrl: 'https://...vtwin.hex',
-          image: 'assets/vtwin_mode.png',
-          color: const Color(0xFF3F51B5),
-          company: 'Harley-Davidson',
-          isPremium: true,
-          compatibleModels: ['Fat Boy', 'Softail'],
-        ),
-        CalibrationFile(
-          id: 'hd3',
-          name: 'TOURING PRO',
-          description: 'Optimized for loaded touring with pillion',
-          price: 14.99,
-          hexUrl: 'https://...touring.hex',
-          image: 'assets/touring_mode.png',
-          color: const Color(0xFF607D8B),
-          company: 'Harley-Davidson',
-          isPremium: true,
-          compatibleModels: ['Road King', 'Street Glide'],
-        ),
+            id: 'ktm1',
+            name: 'STREET MODE',
+            description: 'Balanced performance for daily riding',
+            price: 0,
+            hexUrl: 'https://...street.hex',
+            image: 'assets/street_mode.png',
+            color: const Color(0xFF2196F3),
+            company: 'KTM',
+            isPremium: false,
+            compatibleModels: ['Duke 390', 'Duke 250', 'RC 390']),
       ],
     ),
   ];
@@ -308,7 +173,7 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -321,11 +186,19 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'assets/logo.png',
+            height: 40,
+            width: 40,
+          ),
+        ),
         title: const Text('RIDEWAVE PRO'),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle),
-            onPressed: () => _tabController.animateTo(5),
+            onPressed: () => _tabController.animateTo(3),
           ),
         ],
       ),
@@ -334,9 +207,7 @@ class _MainScreenState extends State<MainScreen>
         children: [
           _buildShopTab(),
           _buildCartTab(),
-          _buildAbsTab(),
-          _buildSuspensionTab(),
-          _buildUploadTab(),
+          _buildFlashTab(),
           _buildProfileTab(),
         ],
       ),
@@ -354,8 +225,6 @@ class _MainScreenState extends State<MainScreen>
             Tab(icon: Icon(Icons.shop)),
             Tab(icon: Icon(Icons.shopping_cart)),
             Tab(icon: Icon(Icons.flash_on)),
-            Tab(icon: Icon(Icons.car_repair)),
-            Tab(icon: Icon(Icons.upload)),
             Tab(icon: Icon(Icons.person)),
           ],
         ),
@@ -364,10 +233,19 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Widget _buildShopTab() {
-    // Get all calibrations for the user's selected company
-    final companyCalibrations = bikeCompanies
-        .firstWhere((company) => company.name == _userProfile.bikeCompany)
-        .calibrations;
+    // Filter companies based on selected bike brand
+    final filteredCompanies = bikeCompanies
+        .where((company) => company.name == _userProfile.bikeCompany)
+        .toList();
+
+    final compatibleCalibrations = bikeCompanies
+        .where((company) => company.name == _userProfile.bikeCompany)
+        .expand((company) => company.calibrations.where(
+              (cal) =>
+                  cal.compatibleModels.isEmpty ||
+                  cal.compatibleModels.contains(_userProfile.bikeModel),
+            ))
+        .toList();
 
     return DefaultTabController(
       length: 2,
@@ -388,57 +266,53 @@ class _MainScreenState extends State<MainScreen>
           Expanded(
             child: TabBarView(
               children: [
-                // Companies view - showing all calibrations from selected company
-                ListView(
-                  children: [
-                    ExpansionTile(
-                      initiallyExpanded: true,
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage(bikeCompanies
-                            .firstWhere(
-                                (c) => c.name == _userProfile.bikeCompany)
-                            .logo),
-                      ),
-                      title: Text(
-                        _userProfile.bikeCompany,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.75,
+                // Show only the selected brand's calibrations
+                filteredCompanies.isEmpty
+                    ? const Center(
+                        child: Text(
+                            'No calibrations available for selected brand'))
+                    : ListView.builder(
+                        itemCount: filteredCompanies.length,
+                        itemBuilder: (context, index) {
+                          final company = filteredCompanies[index];
+                          return ExpansionTile(
+                            leading: CircleAvatar(
+                              backgroundImage: AssetImage(company.logo),
                             ),
-                            itemCount: companyCalibrations.length,
-                            itemBuilder: (context, index) {
-                              return CalibrationCard(
-                                file: companyCalibrations[index],
-                                onPurchase: () =>
-                                    _addToCart(companyCalibrations[index]),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                // "For Your Bike" tab still shows only compatible calibrations
-                companyCalibrations
-                        .where((cal) =>
-                            cal.compatibleModels.isEmpty ||
-                            cal.compatibleModels
-                                .contains(_userProfile.bikeModel))
-                        .toList()
-                        .isEmpty
+                            title: Text(
+                              company.name,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 16,
+                                    childAspectRatio: 0.75,
+                                  ),
+                                  itemCount: company.calibrations.length,
+                                  itemBuilder: (context, calIndex) {
+                                    return CalibrationCard(
+                                      file: company.calibrations[calIndex],
+                                      onPurchase: () => _addToCart(
+                                          company.calibrations[calIndex]),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                compatibleCalibrations.isEmpty
                     ? const Center(
                         child: Text(
                             'No compatible calibrations found for your bike'))
@@ -454,26 +328,14 @@ class _MainScreenState extends State<MainScreen>
                                 mainAxisSpacing: 16,
                                 childAspectRatio: 0.75,
                               ),
-                              delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                final compatibleCals = companyCalibrations
-                                    .where((cal) =>
-                                        cal.compatibleModels.isEmpty ||
-                                        cal.compatibleModels
-                                            .contains(_userProfile.bikeModel))
-                                    .toList();
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
                                 return CalibrationCard(
-                                  file: compatibleCals[index],
+                                  file: compatibleCalibrations[index],
                                   onPurchase: () =>
-                                      _addToCart(compatibleCals[index]),
+                                      _addToCart(compatibleCalibrations[index]),
                                 ).animate().fadeIn(delay: (100 * index).ms);
-                              },
-                                  childCount: companyCalibrations
-                                      .where((cal) =>
-                                          cal.compatibleModels.isEmpty ||
-                                          cal.compatibleModels
-                                              .contains(_userProfile.bikeModel))
-                                      .length),
+                              }, childCount: compatibleCalibrations.length),
                             ),
                           ),
                         ],
@@ -576,39 +438,41 @@ class _MainScreenState extends State<MainScreen>
           );
   }
 
-  Widget _buildAbsTab() {
-    return Column(
-      children: [
-        if (_activeCalibrations.isNotEmpty) ...[
+  Widget _buildFlashTab() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          if (_activeCalibrations.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Text(
+                'ACTIVE CALIBRATIONS',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ),
+            ..._activeCalibrations
+                .map((item) => _buildCalibrationItem(item, true)),
+          ],
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              'ACTIVE CALIBRATIONS',
+              'PURCHASED CALIBRATIONS',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
-          ..._activeCalibrations
-              .map((item) => _buildCalibrationItem(item, true)),
+          _purchasedItems.isEmpty
+              ? const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('No purchased calibrations'),
+                )
+              : Column(
+                  children: _purchasedItems
+                      .map((item) => _buildCalibrationItem(item,
+                          _activeCalibrations.any((cal) => cal.id == item.id)))
+                      .toList(),
+                ),
         ],
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Text(
-            'PURCHASED CALIBRATIONS',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-        ),
-        _purchasedItems.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('No purchased calibrations'),
-              )
-            : Column(
-                children: _purchasedItems
-                    .map((item) => _buildCalibrationItem(item,
-                        _activeCalibrations.any((cal) => cal.id == item.id)))
-                    .toList(),
-              ),
-      ],
+      ),
     );
   }
 
@@ -648,125 +512,202 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
-  void _deleteCalibration(CalibrationFile file) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Delete ${file.name}?'),
-        content:
-            Text('This will remove the calibration from your purchased items.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _purchasedItems.removeWhere((item) => item.id == file.id);
-                _activeCalibrations.removeWhere((item) => item.id == file.id);
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${file.name} deleted')),
-              );
-            },
-            child: Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuspensionTab() {
-    return Column(
-      children: [
-        Container(
-          height: 200,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                _currentModeColor.withOpacity(0.8),
-                _currentModeColor.withOpacity(0.4),
-              ],
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.car_repair, size: 60, color: Colors.white),
-              const SizedBox(height: 16),
-              Text(
-                _currentSuspensionMode,
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Current Suspension Mode',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white.withOpacity(0.9),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: _suspensionModes.length,
-            itemBuilder: (context, index) {
-              final mode = _suspensionModes[index];
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ListTile(
-                  leading: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: mode['color'].withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(mode['icon'], color: mode['color']),
-                  ),
-                  title: Text(
-                    mode['name'],
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(mode['description']),
-                  trailing: _currentSuspensionMode == mode['name']
-                      ? const Icon(Icons.check_circle, color: Colors.green)
-                      : null,
-                  onTap: () => _setSuspensionMode(
-                    mode['mode'],
-                    mode['name'],
-                    mode['color'],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUploadTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
+  Widget _buildProfileTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+          horizontal: 16, vertical: 8), // Added symmetric padding
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Card(
+            margin: const EdgeInsets.only(bottom: 16), // Added margin
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey[200],
+                        backgroundImage: _userProfile.customBikeImage != null
+                            ? FileImage(_userProfile.customBikeImage!)
+                            : (_userProfile.profileImage.startsWith('http')
+                                    ? NetworkImage(_userProfile.profileImage)
+                                    : AssetImage(_userProfile.profileImage))
+                                as ImageProvider,
+                      ),
+                      FloatingActionButton.small(
+                        onPressed: _changeProfilePicture,
+                        backgroundColor: Colors.blue,
+                        child: const Icon(Icons.camera_alt, size: 20),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    initialValue: _userProfile.name,
+                    decoration: InputDecoration(
+                      labelText: 'Rider Name',
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.person),
+                      suffixIcon: const Icon(Icons.edit),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12), // Adjusted padding
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _userProfile.name = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _userProfile.email,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            margin: const EdgeInsets.only(bottom: 16), // Added margin
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'BIKE INFORMATION',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: _userProfile.bikeCompany,
+                          decoration: InputDecoration(
+                            labelText: 'Brand',
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.branding_watermark),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12), // Adjusted padding
+                          ),
+                          items: bikeModelsByBrand.keys.map((String brand) {
+                            return DropdownMenuItem(
+                              value: brand,
+                              child: Text(brand),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _userProfile.bikeCompany = newValue!;
+                              _userProfile.bikeModel =
+                                  bikeModelsByBrand[newValue]!.first;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 3,
+                        child: DropdownButtonFormField<String>(
+                          value: _userProfile.bikeModel,
+                          decoration: InputDecoration(
+                            labelText: 'Model',
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.motorcycle),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12), // Adjusted padding
+                          ),
+                          items: bikeModelsByBrand[_userProfile.bikeCompany]!
+                              .map((String model) {
+                            return DropdownMenuItem(
+                              value: model,
+                              child: Text(model),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _userProfile.bikeModel = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            margin: const EdgeInsets.only(bottom: 16), // Added margin
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'CURRENT SUSPENSION MODE',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: _currentModeColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _currentModeColor.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.motorcycle,
+                            color:
+                                _currentModeColor), // Changed from car to bike icon
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _currentSuspensionMode,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: _currentModeColor,
+                              ),
+                            ),
+                            Text(
+                              _getSuspensionModeDescription(
+                                  _currentSuspensionMode),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            margin: const EdgeInsets.only(bottom: 16), // Added margin
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -774,7 +715,10 @@ class _MainScreenState extends State<MainScreen>
                 children: [
                   const Text(
                     'UPLOAD CUSTOM CALIBRATION',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   const Text('Select HEX file from device storage:'),
@@ -796,294 +740,79 @@ class _MainScreenState extends State<MainScreen>
                     controller: _ipController,
                     decoration: InputDecoration(
                       labelText: 'Device IP Address',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      border: const OutlineInputBorder(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(12)),
                       ),
                       prefixIcon: const Icon(Icons.developer_board),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12), // Adjusted padding
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          Card(
+            margin: const EdgeInsets.only(bottom: 16), // Added margin
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'PURCHASE HISTORY',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _purchasedItems.isEmpty
+                      ? Column(
+                          children: [
+                            Icon(Icons.history,
+                                size: 48, color: Colors.grey[400]),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No purchases yet',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: _purchasedItems.map((item) {
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: item.color.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.flash_on, color: item.color),
+                              ),
+                              title: Text(item.name),
+                              subtitle: Text(
+                                '${item.company} • \$${item.price.toStringAsFixed(2)}',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              trailing: Text(
+                                'Purchased',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                ],
+              ),
+            ),
+          ),
         ],
-      ),
-    );
-  }
-
-  Future<void> _pickBikeImage() async {
-    final pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _userProfile.customBikeImage = File(pickedFile.files.single.path!);
-      });
-    }
-  }
-
-  Future<void> _changeProfilePicture() async {
-    final pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _userProfile.profileImage = pickedFile.files.single.path!;
-      });
-    }
-  }
-
-  final Map<String, List<String>> bikeModelsByBrand = {
-    'Bajaj': ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200', 'Avenger 220'],
-    'Royal Enfield': [
-      'Classic 350',
-      'Meteor 350',
-      'Himalayan 450',
-      'Interceptor 650'
-    ],
-    'KTM': ['Duke 390', 'Duke 250', 'RC 390', 'RC 200'],
-    'Yamaha': ['R15 V4', 'MT-15', 'FZ-S', 'FZ-X'],
-    'Harley-Davidson': ['Street 750', 'Iron 883', 'Fat Boy', 'Road King'],
-    'Other': ['Custom Bike'],
-  };
-
-  Widget _buildProfileTab() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Profile Header Card
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.grey[200],
-                          backgroundImage: _userProfile.customBikeImage != null
-                              ? FileImage(_userProfile.customBikeImage!)
-                              : (_userProfile.profileImage.startsWith('http')
-                                      ? NetworkImage(_userProfile.profileImage)
-                                      : AssetImage(_userProfile.profileImage))
-                                  as ImageProvider,
-                        ),
-                        FloatingActionButton.small(
-                          onPressed: _changeProfilePicture,
-                          backgroundColor: Colors.blue,
-                          child: const Icon(Icons.camera_alt, size: 20),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      initialValue: _userProfile.name,
-                      decoration: InputDecoration(
-                        labelText: 'Rider Name',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
-                        suffixIcon: Icon(Icons.edit),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _userProfile.name = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _userProfile.email,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Bike Information Card
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'BIKE INFORMATION',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: DropdownButtonFormField<String>(
-                            value: _userProfile.bikeCompany,
-                            decoration: InputDecoration(
-                              labelText: 'Brand',
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.branding_watermark),
-                            ),
-                            items: bikeModelsByBrand.keys.map((String brand) {
-                              return DropdownMenuItem(
-                                value: brand,
-                                child: Text(brand),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _userProfile.bikeCompany = newValue!;
-                                _userProfile.bikeModel =
-                                    bikeModelsByBrand[newValue]!.first;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          flex: 3,
-                          child: DropdownButtonFormField<String>(
-                            value: _userProfile.bikeModel,
-                            decoration: InputDecoration(
-                              labelText: 'Model',
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.motorcycle),
-                            ),
-                            items: bikeModelsByBrand[_userProfile.bikeCompany]!
-                                .map((String model) {
-                              return DropdownMenuItem(
-                                value: model,
-                                child: Text(model),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _userProfile.bikeModel = newValue!;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    if (_userProfile.bikeModel == 'Custom Bike')
-                      Column(
-                        children: [
-                          OutlinedButton.icon(
-                            onPressed: _pickBikeImage,
-                            icon: Icon(Icons.photo_camera),
-                            label: Text('Upload Bike Photo'),
-                          ),
-                          const SizedBox(height: 8),
-                          if (_userProfile.customBikeImage != null)
-                            Container(
-                              height: 150,
-                              margin: const EdgeInsets.only(top: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                  image:
-                                      FileImage(_userProfile.customBikeImage!),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Purchase History Card
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'PURCHASE HISTORY',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _purchasedItems.isEmpty
-                        ? Column(
-                            children: [
-                              Icon(Icons.history,
-                                  size: 48, color: Colors.grey[400]),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No purchases yet',
-                                style: TextStyle(color: Colors.grey[600]),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            children: _purchasedItems.map((item) {
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: item.color.withOpacity(0.2),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child:
-                                      Icon(Icons.flash_on, color: item.color),
-                                ),
-                                title: Text(item.name),
-                                subtitle: Text(
-                                  '${item.company} • \$${item.price.toStringAsFixed(2)}',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                trailing: Text(
-                                  'Purchased',
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -1140,12 +869,31 @@ class _MainScreenState extends State<MainScreen>
     );
 
     try {
-      final response = await http.post(
+      // Flash the ABS calibration
+      final absResponse = await http.post(
         Uri.parse('http://${_ipController.text}/flash'),
         body: {'hex_url': file.hexUrl},
       );
 
-      if (response.statusCode == 200) {
+      if (absResponse.statusCode == 200) {
+        // If ABS flash is successful and file has suspension mode, set suspension
+        if (file.suspensionMode != null) {
+          final suspensionResponse = await http.post(
+            Uri.parse('http://${_ipController.text}/suspension'),
+            body: {'mode': file.suspensionMode},
+          );
+
+          if (suspensionResponse.statusCode == 200) {
+            // Update UI for suspension mode
+            final suspensionMode =
+                _getSuspensionModeDetails(file.suspensionMode!);
+            setState(() {
+              _currentSuspensionMode = suspensionMode['name'];
+              _currentModeColor = suspensionMode['color'];
+            });
+          }
+        }
+
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text('${file.name} flashed successfully!'),
@@ -1153,7 +901,7 @@ class _MainScreenState extends State<MainScreen>
           ),
         );
       } else {
-        throw Exception('Failed to flash: ${response.body}');
+        throw Exception('Failed to flash: ${absResponse.body}');
       }
     } catch (e) {
       scaffoldMessenger.showSnackBar(
@@ -1165,51 +913,45 @@ class _MainScreenState extends State<MainScreen>
     }
   }
 
-  Future<void> _setSuspensionMode(String mode, String name, Color color) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: Text('Setting suspension to $name mode...'),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+  Map<String, dynamic> _getSuspensionModeDetails(String mode) {
+    switch (mode) {
+      case '0':
+        return {
+          'name': 'MODE 0',
+          'color': Colors.blue,
+          'description': 'Soft suspension for maximum comfort'
+        };
+      case '1':
+        return {
+          'name': 'MODE 1',
+          'color': Colors.green,
+          'description': 'Balanced ride quality and handling'
+        };
+      case '2':
+        return {
+          'name': 'MODE 2',
+          'color': Colors.red,
+          'description': 'Aggressive driving for rough terrain'
+        };
+      default:
+        return {
+          'name': 'MODE 1',
+          'color': Colors.green,
+          'description': 'Balanced ride quality and handling'
+        };
+    }
+  }
 
-    try {
-      final response = await http.post(
-        Uri.parse('http://${_ipController.text}/suspension'),
-        body: {'mode': mode},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _currentSuspensionMode = name;
-          _currentModeColor = color;
-        });
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text('Suspension set to $name mode'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        throw Exception('Failed to set suspension mode');
-      }
-    } catch (e) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
+  String _getSuspensionModeDescription(String mode) {
+    switch (mode) {
+      case 'MODE 0':
+        return 'Soft suspension for maximum comfort';
+      case 'MODE 1':
+        return 'Balanced ride quality and handling';
+      case 'MODE 2':
+        return 'Aggressive driving for rough terrain';
+      default:
+        return 'Balanced ride quality and handling';
     }
   }
 
@@ -1263,99 +1005,73 @@ class _MainScreenState extends State<MainScreen>
     }
   }
 
-  void _toggleCalibration(CalibrationFile file, bool enable) {
-    setState(() {
-      if (enable) {
-        _activeCalibrations.add(file);
-        _flashToEsp32(file);
-      } else {
-        _activeCalibrations.removeWhere((cal) => cal.id == file.id);
-        _disableCalibration(file);
-      }
-    });
-  }
-
-  Future<void> _disableCalibration(CalibrationFile file) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    try {
-      final response = await http.post(
-        Uri.parse('http://${_ipController.text}/disable'),
-        body: {'calibration_id': file.id},
-      );
-
-      if (response.statusCode == 200) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text('${file.name} disabled'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      } else {
-        throw Exception('Failed to disable calibration');
-      }
-    } catch (e) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text('Error disabling calibration: $e'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  Future<void> _changeBikeInfo() async {
-    final result = await showDialog<Map<String, String>>(
-      context: context,
-      builder: (context) => BikeSelectionDialog(
-        currentCompany: _userProfile.bikeCompany,
-        currentModel: _userProfile.bikeModel,
-      ),
+  Future<void> _changeProfilePicture() async {
+    final pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
     );
 
-    if (result != null) {
+    if (pickedFile != null) {
       setState(() {
-        _userProfile = UserProfile(
-          name: _userProfile.name,
-          email: _userProfile.email,
-          bikeCompany: result['company']!,
-          bikeModel: result['model']!,
-          profileImage: _userProfile.profileImage,
-        );
+        _userProfile.profileImage = pickedFile.files.single.path!;
       });
-      _tabController.animateTo(0);
     }
   }
 
-  final List<Map<String, dynamic>> _suspensionModes = [
-    {
-      'name': 'MODE 0',
-      'description': 'Soft suspension for maximum comfort',
-      'icon': Icons.airline_seat_recline_normal,
-      'color': Colors.blue,
-      'mode': 'MODE 0'
-    },
-    {
-      'name': 'MODE 1',
-      'description': 'Balanced ride quality and handling',
-      'icon': Icons.directions_car,
-      'color': Colors.green,
-      'mode': 'MODE 1'
-    },
-    {
-      'name': 'MODE 2',
-      'description': 'Aggressive driving',
-      'icon': Icons.speed,
-      'color': Colors.red,
-      'mode': 'MODE 2'
-    },
-  ];
+  Future<void> _pickBikeImage() async {
+    final pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _userProfile.customBikeImage = File(pickedFile.files.single.path!);
+      });
+    }
+  }
+
+  void _deleteCalibration(CalibrationFile file) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete ${file.name}?'),
+        content:
+            Text('This will remove the calibration from your purchased items.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _purchasedItems.removeWhere((item) => item.id == file.id);
+                _activeCalibrations.removeWhere((item) => item.id == file.id);
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('${file.name} deleted')),
+              );
+            },
+            child: Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  final Map<String, List<String>> bikeModelsByBrand = {
+    'Bajaj': ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200', 'Avenger 220'],
+    'Royal Enfield': [
+      'Classic 350',
+      'Meteor 350',
+      'Himalayan 450',
+      'Interceptor 650'
+    ],
+    'KTM': ['Duke 390', 'Duke 250', 'RC 390', 'RC 200'],
+    'Other': ['Custom Bike'],
+  };
 }
 
 class BikeCompany {
@@ -1385,6 +1101,7 @@ class CalibrationFile {
   final List<String> compatibleModels;
   final double rating;
   final int downloads;
+  final String? suspensionMode;
 
   CalibrationFile({
     required this.id,
@@ -1399,6 +1116,7 @@ class CalibrationFile {
     this.compatibleModels = const [],
     this.rating = 4.5,
     this.downloads = 1000,
+    this.suspensionMode,
   });
 }
 
@@ -1737,112 +1455,6 @@ class CalibrationDetails extends StatelessWidget {
           Text(text),
         ],
       ),
-    );
-  }
-}
-
-class BikeSelectionDialog extends StatefulWidget {
-  final String currentCompany;
-  final String currentModel;
-
-  const BikeSelectionDialog({
-    super.key,
-    required this.currentCompany,
-    required this.currentModel,
-  });
-
-  @override
-  State<BikeSelectionDialog> createState() => _BikeSelectionDialogState();
-}
-
-class _BikeSelectionDialogState extends State<BikeSelectionDialog> {
-  late String _selectedCompany;
-  late String _selectedModel;
-
-  final Map<String, List<String>> _bikeModels = {
-    'Bajaj': ['Pulsar NS200', 'Dominar 400', 'Pulsar RS200', 'Avenger 220'],
-    'Royal Enfield': [
-      'Classic 350',
-      'Meteor 350',
-      'Himalayan 450',
-      'Interceptor 650'
-    ],
-    'KTM': ['Duke 390', 'Duke 250', 'RC 390', 'RC 200'],
-    'Yamaha': ['R15 V4', 'MT-15', 'FZ-S', 'FZ-X'],
-    'Harley-Davidson': ['Street 750', 'Iron 883', 'Fat Boy', 'Road King'],
-  };
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedCompany = widget.currentCompany;
-    _selectedModel = widget.currentModel;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Select Your Bike'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          DropdownButtonFormField<String>(
-            value: _selectedCompany,
-            items: _bikeModels.keys
-                .map((company) => DropdownMenuItem(
-                      value: company,
-                      child: Text(company),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedCompany = value!;
-                _selectedModel = _bikeModels[value]!.first;
-              });
-            },
-            decoration: InputDecoration(
-              labelText: 'Manufacturer',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            value: _selectedModel,
-            items: _bikeModels[_selectedCompany]!
-                .map((model) => DropdownMenuItem(
-                      value: model,
-                      child: Text(model),
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedModel = value!;
-              });
-            },
-            decoration: InputDecoration(
-              labelText: 'Model',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, {
-            'company': _selectedCompany,
-            'model': _selectedModel,
-          }),
-          child: const Text('Save'),
-        ),
-      ],
     );
   }
 }
