@@ -81,6 +81,7 @@ class _MainScreenState extends State<MainScreen>
           name: 'RAIN MODE',
           description: 'Enhanced wet traction & stability control',
           price: 0,
+          rating: 3.9,
           hexUrl:
               'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Rain_cal.hex',
           image: 'assets/rain_mode.png',
@@ -95,6 +96,7 @@ class _MainScreenState extends State<MainScreen>
           name: 'ROAD MODE',
           description: 'Max performance for street riding',
           price: 0,
+          rating: 3.8,
           hexUrl:
               'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Road_cal.hex',
           image: 'assets/road_mode.png',
@@ -109,6 +111,7 @@ class _MainScreenState extends State<MainScreen>
           name: 'OFF-ROAD MODE',
           description: 'Optimized for rough terrain',
           price: 0,
+          rating: 4.8,
           hexUrl:
               'https://raw.githubusercontent.com/srirammohan2002/ESP32_HEX_Files/refs/heads/main/47c_Cycle_AT048_D1R0_1CH_2WS_DB229_JW01a_K125_12.7_deb027_Off_Road_cal.hex',
           image: 'assets/offroad_mode.png',
@@ -120,15 +123,31 @@ class _MainScreenState extends State<MainScreen>
         ),
         CalibrationFile(
           id: 'b4',
-          name: 'TRACK MODE PRO',
-          description: 'Race track optimized with advanced tuning',
+          name: 'RELAX MODE',
+          description: 'Relax',
           price: 150,
+          rating: 4.7,
+          monthlyPrice: '15/month',
           hexUrl: 'https://...track_pro.hex',
           image: 'assets/track_mode.png',
           color: const Color(0xFFFF5252),
           company: 'Bajaj',
           isPremium: true, // This is still marked as premium
           compatibleModels: ['Pulsar RS200', 'Dominar 400'],
+        ),
+        CalibrationFile(
+          id: 'b5',
+          name: 'ADVENTURE MODE',
+          description: 'Optimized for challenging terrain',
+          rating: 4.8,
+          price: 200,
+          monthlyPrice: '30/month',
+          hexUrl: 'https://...Adventure.hex',
+          image: 'assets/Adventure_mode.png',
+          color: const Color(0xffe15454),
+          company: 'Bajaj',
+          isPremium: true,
+          compatibleModels: ['Dominar 400'],
         ),
       ],
     ),
@@ -148,6 +167,31 @@ class _MainScreenState extends State<MainScreen>
             company: 'Royal Enfield',
             isPremium: false,
             compatibleModels: ['Classic 350', 'Meteor 350']),
+        CalibrationFile(
+            id: '2',
+            name: 'Touring Mode',
+            description: 'touring mode balances power and comfort',
+            price: 220,
+            hexUrl: 'https://...touring.hex',
+            image: 'ssets/touring_mode.png',
+            color: const Color(0xff5604f1),
+            company: 'Royal Enfield',
+            isPremium: true,
+            compatibleModels: ['Himalayan']),
+        CalibrationFile(
+          id: '2',
+          name: 'ADVENTURE MODE',
+          description: 'Optimized for challenging terrain',
+          rating: 4.8,
+          price: 200,
+          monthlyPrice: '30/month',
+          hexUrl: 'https://...Adventure.hex',
+          image: 'assets/Adventure_mode.png',
+          color: const Color(0xffe15454),
+          company: 'Bajaj',
+          isPremium: true,
+          compatibleModels: ['Dominar 400'],
+        ),
       ],
     ),
     BikeCompany(
@@ -186,19 +230,25 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 120,
+        leadingWidth: 100,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(10),
           child: Image.asset(
             'assets/logo.png',
-            height: 40,
-            width: 40,
+            height: 90,
+            fit: BoxFit.contain,
           ),
         ),
         title: const Text('RIDEWAVE PRO'),
+        centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            onPressed: () => _tabController.animateTo(3),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: const Icon(Icons.account_circle, size: 32),
+              onPressed: () => _tabController.animateTo(3),
+            ),
           ),
         ],
       ),
@@ -877,7 +927,7 @@ class _MainScreenState extends State<MainScreen>
 
       if (absResponse.statusCode == 200) {
         // If ABS flash is successful and file has suspension mode, set suspension
-        if (file.suspensionMode != null) {
+        if (file.suspensionMode != null && file.suspensionMode!.isNotEmpty) {
           final suspensionResponse = await http.post(
             Uri.parse('http://${_ipController.text}/suspension'),
             body: {'mode': file.suspensionMode},
@@ -891,6 +941,9 @@ class _MainScreenState extends State<MainScreen>
               _currentSuspensionMode = suspensionMode['name'];
               _currentModeColor = suspensionMode['color'];
             });
+          } else {
+            throw Exception(
+                'Failed to set suspension: ${suspensionResponse.body}');
           }
         }
 
@@ -900,6 +953,13 @@ class _MainScreenState extends State<MainScreen>
             backgroundColor: Colors.green,
           ),
         );
+
+        // Add to active calibrations if not already there
+        if (!_activeCalibrations.any((cal) => cal.id == file.id)) {
+          setState(() {
+            _activeCalibrations.add(file);
+          });
+        }
       } else {
         throw Exception('Failed to flash: ${absResponse.body}');
       }
@@ -1093,6 +1153,7 @@ class CalibrationFile {
   final String name;
   final String description;
   final double price;
+  final String? monthlyPrice;
   final String hexUrl;
   final String image;
   final Color color;
@@ -1108,6 +1169,7 @@ class CalibrationFile {
     required this.name,
     required this.description,
     required this.price,
+    this.monthlyPrice,
     required this.hexUrl,
     required this.image,
     required this.color,
@@ -1156,60 +1218,54 @@ class CalibrationCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 500),
-              pageBuilder: (_, __, ___) => CalibrationDetails(file: file),
-              transitionsBuilder: (_, animation, __, child) {
-                return FadeTransition(opacity: animation, child: child);
-              },
+            MaterialPageRoute(
+              builder: (context) => CalibrationDetails(file: file),
             ),
           );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Image/Icon Section
             Expanded(
-              child: Hero(
-                tag: 'image_${file.id}',
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: file.color.withOpacity(0.2),
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: file.color.withOpacity(0.2),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
                   ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child:
-                            Icon(Icons.flash_on, size: 60, color: file.color),
-                      ),
-                      if (file.isPremium)
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Text(
-                              'PREMIUM',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                ),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Icon(Icons.flash_on, size: 60, color: file.color),
+                    ),
+                    if (file.isPremium)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurple,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            'PREMIUM',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
             ),
+            // Info Section
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -1224,6 +1280,7 @@ class CalibrationCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     file.company,
                     style: TextStyle(
@@ -1232,59 +1289,73 @@ class CalibrationCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
+                  // Price Display - Always visible
+                  if (file.price == 0)
+                    const Text(
+                      'FREE',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    )
+                  else if (file.isPremium)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '₹${file.price}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                        Text(
+                          '₹${file.monthlyPrice ?? '250/month'}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Text(
+                      '₹${file.price}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                  // Rating and Action Button
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: 4),
                       Text(
                         '${file.rating}',
                         style: const TextStyle(fontSize: 12),
                       ),
                       const Spacer(),
-                      if (file.price == 0)
-                        const Text(
-                          'FREE',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
+                      ElevatedButton(
+                        onPressed: onPurchase,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              file.isPremium ? Colors.deepPurple : Colors.blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        )
-                      else
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.attach_money,
-                              color: Colors.green,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 2),
-                            Text(
-                              file.price.toStringAsFixed(2),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ],
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: onPurchase,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            file.isPremium ? Colors.deepPurple : Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        child: Text(
+                          file.isPremium ? 'SUBSCRIBE' : 'ADD TO CART',
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ),
-                      child: Text(file.isPremium ? 'BUY NOW' : 'ADD TO CART'),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -1360,19 +1431,57 @@ class CalibrationDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        file.price == 0
-                            ? 'FREE'
-                            : '\$${file.price.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: file.price == 0 ? Colors.green : Colors.blue,
+                      if (file.price == 0)
+                        const Text(
+                          'FREE',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        )
+                      else if (file.isPremium)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '₹${file.price}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepPurple,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                            Text(
+                              file.monthlyPrice ?? '₹250/month',
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        Text(
+                          '₹${file.price}',
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
                         ),
-                      ),
                       Chip(
-                        label: Text('${file.rating} ★'),
                         backgroundColor: Colors.amber.withOpacity(0.2),
+                        label: Row(
+                          children: [
+                            const Icon(Icons.star,
+                                color: Colors.amber, size: 16),
+                            const SizedBox(width: 4),
+                            Text('${file.rating}'),
+                          ],
+                        ),
                       ),
                     ],
                   ),
