@@ -258,7 +258,7 @@ class _MainScreenState extends State<MainScreen>
           children: [
             Image.asset('assets/logo.png', height: 30),
             const SizedBox(width: 10),
-            const Text('RIDEWAVE PRO'),
+            const Text('RIDEWAVE'),
           ],
         ),
         actions: [
