@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-//import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
   runApp(const CalibrationShopApp());
@@ -31,7 +30,7 @@ class CalibrationShopApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           elevation: 2,
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -56,10 +55,9 @@ class _MainScreenState extends State<MainScreen>
   late TabController _tabController;
   final TextEditingController _ipController =
       TextEditingController(text: '172.20.10.5');
-  String _currentSuspensionMode = 'MODE 1';
+  String _currentSuspensionMode = 'MODE 0';
   Color _currentModeColor = Colors.green;
 
-  final List<CalibrationFile> _cartItems = [];
   final List<CalibrationFile> _purchasedItems = [];
   final List<CalibrationFile> _activeCalibrations = [];
 
@@ -125,12 +123,11 @@ class _MainScreenState extends State<MainScreen>
           description: 'Relax',
           price: 0.9,
           rating: 4.7,
-          // monthlyPrice: '15/month',
           hexUrl: 'https://...track_pro.hex',
           image: 'assets/track_mode.png',
           color: const Color(0xFFFF5252),
           company: 'Bajaj',
-          isPremium: true, // This is still marked as premium
+          isPremium: true,
           compatibleModels: ['Pulsar RS200', 'Dominar 400'],
         ),
         CalibrationFile(
@@ -139,7 +136,6 @@ class _MainScreenState extends State<MainScreen>
           description: 'Optimized for challenging terrain',
           rating: 4.8,
           price: 0.6,
-          //monthlyPrice: '30/month',
           hexUrl: 'https://...Adventure.hex',
           image: 'assets/Adventure_mode.png',
           color: const Color(0xffe15454),
@@ -184,7 +180,6 @@ class _MainScreenState extends State<MainScreen>
           description: 'Optimized for challenging terrain',
           rating: 4.8,
           price: 200,
-          //monthlyPrice: '30/month',
           hexUrl: 'https://...Adventure.hex',
           image: 'assets/Adventure_mode.png',
           color: const Color(0xffe15454),
@@ -216,21 +211,21 @@ class _MainScreenState extends State<MainScreen>
 
   final List<Map<String, dynamic>> _suspensionModes = [
     {
-      'name': 'MODE 0',
+      'name': 'RAIN_MODE',
       'description': 'Soft suspension for maximum comfort',
       'icon': Icons.airline_seat_recline_normal,
       'color': Colors.blue,
       'mode': 'MODE 0'
     },
     {
-      'name': 'MODE 1',
+      'name': 'ROAD_MODE',
       'description': 'Balanced ride quality and handling',
       'icon': Icons.directions_car,
       'color': Colors.green,
       'mode': 'MODE 1'
     },
     {
-      'name': 'MODE 2',
+      'name': 'OFF-ROAD_MODE',
       'description': 'Aggressive driving',
       'icon': Icons.speed,
       'color': Colors.red,
@@ -241,7 +236,7 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -264,7 +259,7 @@ class _MainScreenState extends State<MainScreen>
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle),
-            onPressed: () => _tabController.animateTo(3),
+            onPressed: () => _tabController.animateTo(2),
           ),
         ],
       ),
@@ -272,7 +267,6 @@ class _MainScreenState extends State<MainScreen>
         controller: _tabController,
         children: [
           _buildShopTab(),
-          _buildCartTab(),
           _buildFlashTab(),
           _buildProfileTab(),
         ],
@@ -289,7 +283,6 @@ class _MainScreenState extends State<MainScreen>
           indicatorColor: Colors.blue,
           tabs: const [
             Tab(icon: Icon(Icons.shop)),
-            Tab(icon: Icon(Icons.shopping_cart)),
             Tab(icon: Icon(Icons.flash_on)),
             Tab(icon: Icon(Icons.person)),
           ],
@@ -299,13 +292,11 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Widget _buildShopTab() {
-    // Get the current company
     final currentCompany = bikeCompanies.firstWhere(
       (company) => company.name == _userProfile.bikeCompany,
       orElse: () => bikeCompanies.first,
     );
 
-    // Get compatible calibrations
     final companyCalibrations = currentCompany.calibrations
         .where((cal) =>
             cal.compatibleModels.isEmpty ||
@@ -317,7 +308,6 @@ class _MainScreenState extends State<MainScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Brand header with logo
           Row(
             children: [
               Image.asset(
@@ -336,8 +326,6 @@ class _MainScreenState extends State<MainScreen>
             ],
           ),
           const SizedBox(height: 16),
-
-          // Calibration cards
           Expanded(
             child: companyCalibrations.isEmpty
                 ? const Center(
@@ -359,7 +347,7 @@ class _MainScreenState extends State<MainScreen>
                       return CalibrationCard(
                         file: companyCalibrations[index],
                         onPurchase: () =>
-                            _addToCart(companyCalibrations[index]),
+                            _purchaseItem(companyCalibrations[index]),
                       ).animate().fadeIn(delay: (100 * index).ms);
                     },
                   ),
@@ -367,110 +355,6 @@ class _MainScreenState extends State<MainScreen>
         ],
       ),
     );
-  }
-
-  Widget _buildCartTab() {
-    return _cartItems.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.shopping_cart_outlined,
-                    size: 64, color: Colors.grey),
-                const SizedBox(height: 16),
-                const Text('Your cart is empty',
-                    style: TextStyle(fontSize: 18, color: Colors.grey)),
-              ],
-            ),
-          )
-        : Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _cartItems.length,
-                  itemBuilder: (context, index) {
-                    final item = _cartItems[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: item.color.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                              child: Icon(Icons.flash_on, color: item.color)),
-                        ),
-                        title: Text(item.name),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(item.isPremium
-                                ? '₹${(item.price * 70).toStringAsFixed(0)}/month'
-                                : 'FREE'),
-                            Text(item.company,
-                                style: const TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _removeFromCart(index),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 8,
-                      offset: const Offset(0, -3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Total:',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(
-                          '₹${(_cartItems.fold(0.0, (double sum, item) => sum + (item.price * 70)).toStringAsFixed(0))}/month',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: _checkout,
-                      icon: const Icon(Icons.payment),
-                      label: const Text('CHECKOUT'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        backgroundColor: Color(0xffc1afe0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
   }
 
   Widget _buildFlashTab() {
@@ -591,7 +475,6 @@ class _MainScreenState extends State<MainScreen>
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Profile Header Card
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -649,8 +532,6 @@ class _MainScreenState extends State<MainScreen>
               ),
             ),
             const SizedBox(height: 16),
-
-            // Bike Information Card with Fixed Overflow
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -669,8 +550,6 @@ class _MainScreenState extends State<MainScreen>
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Brand Selection Dropdown
                     ConstrainedBox(
                       constraints: const BoxConstraints(
                         minWidth: double.infinity,
@@ -722,8 +601,6 @@ class _MainScreenState extends State<MainScreen>
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Model Selection Dropdown
                     ConstrainedBox(
                       constraints: const BoxConstraints(
                         minWidth: double.infinity,
@@ -764,8 +641,6 @@ class _MainScreenState extends State<MainScreen>
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Custom Bike Image Upload
                     if (_userProfile.bikeModel == 'Custom Bike') ...[
                       OutlinedButton.icon(
                         onPressed: _pickBikeImage,
@@ -794,8 +669,6 @@ class _MainScreenState extends State<MainScreen>
               ),
             ),
             const SizedBox(height: 16),
-
-            // ESP32 Connection and Upload Section
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -848,8 +721,6 @@ class _MainScreenState extends State<MainScreen>
               ),
             ),
             const SizedBox(height: 16),
-
-            // Purchase History Card
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -919,43 +790,19 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
-  void _addToCart(CalibrationFile file) {
+  void _purchaseItem(CalibrationFile file) {
     setState(() {
-      _cartItems.add(file);
-      _tabController.animateTo(1);
+      _purchasedItems.add(file);
+      _tabController.animateTo(1); // Navigate to flash tab after purchase
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${file.name} added to cart'),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
-
-  void _removeFromCart(int index) {
-    setState(() {
-      _cartItems.removeAt(index);
-    });
-  }
-
-  void _checkout() {
-    setState(() {
-      _purchasedItems.addAll(_cartItems);
-      _cartItems.clear();
-      _tabController.animateTo(2);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Purchase successful!'),
+        content: Text('${file.name} purchased successfully!'),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
@@ -971,15 +818,13 @@ class _MainScreenState extends State<MainScreen>
     );
 
     try {
-      // Determine corresponding suspension mode
-      String suspensionMode = 'MODE 1'; // Default to road mode
+      String suspensionMode = 'MODE 1';
       if (file.name.toLowerCase().contains('rain')) {
         suspensionMode = 'MODE 0';
       } else if (file.name.toLowerCase().contains('off-road')) {
         suspensionMode = 'MODE 2';
       }
 
-      // Flash ABS calibration
       final absResponse = await http.post(
         Uri.parse('http://${_ipController.text}/flash'),
         body: {'hex_url': file.hexUrl},
@@ -989,17 +834,15 @@ class _MainScreenState extends State<MainScreen>
         throw Exception('Failed to flash ABS: ${absResponse.body}');
       }
 
-      // Flash corresponding suspension mode
       final suspensionResponse = await http.post(
         Uri.parse('http://${_ipController.text}/suspension'),
         body: {'mode': suspensionMode},
       );
 
       if (suspensionResponse.statusCode == 200) {
-        // Find the suspension mode details to update UI
         final mode = _suspensionModes.firstWhere(
           (m) => m['mode'] == suspensionMode,
-          orElse: () => _suspensionModes[1], // Default to MODE 1 if not found
+          orElse: () => _suspensionModes[1],
         );
 
         setState(() {
@@ -1390,7 +1233,8 @@ class CalibrationCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: Text(file.isPremium ? 'SUBSCRIBE' : 'ADD TO CART'),
+                      child:
+                          Text(file.isPremium ? 'SUBSCRIBE NOW' : 'GET IT NOW'),
                     ),
                   ),
                 ],
