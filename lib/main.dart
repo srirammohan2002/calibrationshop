@@ -391,43 +391,52 @@ class _MainScreenState extends State<MainScreen>
                       .toList(),
                 ),
           const SizedBox(height: 16),
-          const Divider(),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text(
-              'SUSPENSION MODE',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _suspensionModes.map((mode) {
-                return ChoiceChip(
-                  label: Text(mode['name']),
-                  selected: _currentSuspensionMode == mode['name'],
-                  onSelected: (selected) {
-                    if (selected) {
-                      _setSuspensionMode(
-                        mode['mode'],
-                        mode['name'],
-                        mode['color'],
-                      );
-                    }
-                  },
-                  selectedColor: mode['color'],
-                  labelStyle: TextStyle(
-                    color: _currentSuspensionMode == mode['name']
-                        ? Colors.white
-                        : Colors.black,
+
+          // Transparent suspension mode section
+          Opacity(
+            opacity: 0, // Makes the section completely transparent
+            child: Column(
+              children: [
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Text(
+                    'SUSPENSION MODE',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                );
-              }).toList(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _suspensionModes.map((mode) {
+                      return ChoiceChip(
+                        label: Text(mode['name']),
+                        selected: _currentSuspensionMode == mode['name'],
+                        onSelected: (selected) {
+                          if (selected) {
+                            _setSuspensionMode(
+                              mode['mode'],
+                              mode['name'],
+                              mode['color'],
+                            );
+                          }
+                        },
+                        selectedColor: mode['color'],
+                        labelStyle: TextStyle(
+                          color: _currentSuspensionMode == mode['name']
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );
@@ -455,13 +464,40 @@ class _MainScreenState extends State<MainScreen>
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () => _deleteCalibration(file),
             ),
-            ElevatedButton(
-              onPressed: () => _flashToEsp32(file),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: file.color,
-                foregroundColor: Colors.white,
+            Transform.scale(
+              scale: 1.2,
+              child: Switch(
+                value: isActive,
+                onChanged: (value) {
+                  if (value) {
+                    _flashToEsp32(file);
+                  } else {
+                    // You might want to add a function to disable the calibration
+                    // onChanged: (value) {
+                    if (value) {
+                      _flashToEsp32(file);
+                    } else {
+                      setState(() {
+                        _activeCalibrations
+                            .removeWhere((cal) => cal.id == file.id);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${file.name} disabled'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    }
+
+                    setState(() {
+                      _activeCalibrations
+                          .removeWhere((cal) => cal.id == file.id);
+                    });
+                  }
+                },
+                activeColor: file.color,
+                activeTrackColor: file.color.withOpacity(0.5),
               ),
-              child: const Text('FLASH'),
             ),
           ],
         ),
