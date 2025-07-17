@@ -848,7 +848,7 @@ class _MainScreenState extends State<MainScreen>
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: Text('Flashing ${file.name}...'),
+        content: Text('Enabling ${file.name}...'),
         behavior: SnackBarBehavior.floating,
       ),
     );
